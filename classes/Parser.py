@@ -53,3 +53,6 @@ class Parser:
                     occur = sum(line.count(nb) for line in self.puzzle)
                     if occur > 2:
                         raise(OccurenceError(nb, occur))
+
+    def getPuzzle(self):
+        return self.puzzle
