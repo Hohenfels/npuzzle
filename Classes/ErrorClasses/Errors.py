@@ -22,6 +22,7 @@ class LineSizeError(Exception):
         print("Error at line {}: Size of line {} > {}".format(i, line, size))
         quit()
 
+
 class OccurenceError(Exception):
     def __init__(self, nb, occurence):
         print("Occurence error: {} appears {} times instead of one".format(nb, occurence))
