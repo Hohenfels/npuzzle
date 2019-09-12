@@ -1,17 +1,11 @@
-class ValueUnderZero(Exception):
-    def __init__(self, i, nb):
-        print("Value Error at line {}: {} is under zero\n"
-              "in formatted file without comments".format(i, nb))
-        exit()
+from Classes.ErrorClasses.Errors import NumberError, \
+                                        PuzzleSizeError, \
+                                        NumberRangeError, \
+                                        LineSizeError, \
+                                        OccurenceError
 
 
-class WrongPuzzleSize(Exception):
-    def __init__(self):
-        print("Size Error: Puzzle must be of a size >= 2")
-        exit()
-
-
-class Parser():
+class Parser:
     puzzle = []
 
     def __init__(self, fpath):
@@ -30,7 +24,6 @@ class Parser():
         for i, line in enumerate(self.puzzle):
             self.puzzle[i] = line.split('#')[0]
         self.puzzle = list(filter(None, self.puzzle))
-        print(self.puzzle)
 
     @staticmethod
     def checkNbValidity(self):
@@ -38,11 +31,11 @@ class Parser():
             line = line.split(' ')
             if len(line) == 1:
                 if int(line[0]) < 0:
-                    raise(WrongPuzzleSize())
+                    raise(PuzzleSizeError())
             for nb in line:
                 if nb:
                     if int(nb) < 0:
-                        raise(ValueUnderZero(i, nb))
+                        raise(NumberError(i, nb))
         return 1
 
     @staticmethod
@@ -50,16 +43,13 @@ class Parser():
         size = int(self.puzzle[0])
         for i, line in enumerate(self.puzzle[1:]):
             line = line.split(' ')
-            if len(line) > size:
-                print("NOT OK") #TODO faire Exception
-            for nb in line:
-                if nb:
-                    if int(nb) > size:
-                        print("NOT OK") #TODO aire Exception
-
-
-
-
-
-
-
+            if '' not in line:
+                if len(line) > size:
+                    raise(LineSizeError(i, line, size))
+                for nb in line:
+                    if nb:
+                        if int(nb) > size * size:
+                            raise(NumberRangeError(i, nb, size))
+                    occur = sum(line.count(nb) for line in self.puzzle)
+                    if occur > 2:
+                        raise(OccurenceError(nb, occur))
