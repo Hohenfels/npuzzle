@@ -48,7 +48,7 @@ class Parser:
                     raise(LineSizeError(i, line, size))
                 for nb in line:
                     if nb:
-                        if int(nb) > size * size:
+                        if int(nb) >= size * size:
                             raise(NumberRangeError(i, nb, size))
                     occur = sum(line.count(nb) for line in self.puzzle)
                     if occur > 2:
