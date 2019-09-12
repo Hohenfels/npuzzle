@@ -6,5 +6,10 @@
 .idea/workspace.xml
 Classes/__pycache__/Parser.cpython-37.pyc
 .idea/inspectionProfiles/profiles_settings.xml
+<<<<<<< HEAD
 __pycache__
 */__pycache__
+=======
+Classes/ErrorClasses/__pycache__/Errors.cpython-37.pyc
+Classes/ErrorClasses/__pycache__/Errors.cpython-37.pyc
+>>>>>>> a4e5c15b1e8697ec3ae9ca0421122b4956419566
