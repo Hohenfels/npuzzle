@@ -1,12 +1,9 @@
-from Classes.ErrorClasses.Errors import NumberError, \
-                                        PuzzleSizeError, \
-                                        NumberRangeError, \
-                                        LineSizeError, \
-                                        OccurenceError
+from Classes.ErrorsModule.Errors import *
 
 
 class Parser:
     puzzle = []
+    size = None
 
     def __init__(self, fpath):
         self.fpath = fpath
@@ -15,14 +12,13 @@ class Parser:
 
     def checkIntegrity(self):
         self.removeComments(self)
-        if self.checkNbValidity(self) and self.puzzleValidity(self):
-            # self.formatPuzzle()
-            print("OK")
+        self.checkNbValidity(self)
+        self.puzzleValidity(self)
 
     @staticmethod
     def removeComments(self):
         for i, line in enumerate(self.puzzle):
-            self.puzzle[i] = line.split('#')[0]
+            self.puzzle[i] = line.split('#')[0].strip(' ')
         self.puzzle = list(filter(None, self.puzzle))
 
     @staticmethod
@@ -33,26 +29,26 @@ class Parser:
                 if int(line[0]) < 0:
                     raise(PuzzleSizeError())
             for nb in line:
-                if nb:
+                if int(nb) != 0:
                     if int(nb) < 0:
                         raise(NumberError(i, nb))
-        return 1
 
     @staticmethod
     def puzzleValidity(self):
-        size = int(self.puzzle[0])
+        self.size = int(self.puzzle[0])
         for i, line in enumerate(self.puzzle[1:]):
             line = line.split(' ')
             if '' not in line:
-                if len(line) > size:
-                    raise(LineSizeError(i, line, size))
+                if len(line) > self.size:
+                    raise(LineSizeError(i, line, self.size))
                 for nb in line:
-                    if nb:
-                        if int(nb) >= size * size:
-                            raise(NumberRangeError(i, nb, size))
-                    occur = sum(line.count(nb) for line in self.puzzle)
+                    if int(nb) != 0:
+                        if int(nb) >= self.size * self.size:
+                            raise(NumberRangeError(i, nb, self.size))
+                    occur = sum(line.count(nb) for line in self.puzzle[1:])
                     if occur > 2:
                         raise(OccurenceError(nb, occur))
 
+    @property
     def getPuzzle(self):
-        return self.puzzle
+        return self.puzzle, self.size
