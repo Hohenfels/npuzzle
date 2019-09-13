@@ -1,15 +1,23 @@
+import numpy as np
+
 class Node():
-    def __init__(self, hFunc, puzzle, parent = None, g = None, size = None):
+    def __init__(self, hFunc, puzzle, parent = None, size = None):
         self.puzzle = puzzle
         self.parent = parent
-        self.g = parent.g + 1 if g else 1
+        self.g = 1 if not parent else parent.g + 1
         self.size = size if size else parent.size
         self.hFunc = hFunc
         self.isSolved = False
 
+    def __str__(self):
+        return str(self.puzzle)
+
+    def __repr__(self):
+        return self.__str__()
+
     @property
     def hash(self):
-        return str(self.puzzle)
+        return hash(str(self.puzzle))
 
     @property
     def score(self):
@@ -21,21 +29,20 @@ class Node():
 
     @property
     def h(self):
-        sum = 0
+        s = 0
         for col in range(self.size):
             for row in range(self.size):
-                coords = self.getSnailCoords(self.size, self.puzzle[row][col])
-                sum += self.hFunc(self.puzzle[coords[0]][coords[1]])
-        if sum == 0:
+                if self.puzzle[col][row] != 0:
+                    # coords = self.getSnailCoords(self.size, self.puzzle[row][col])
+                    self.getSnailCoords(self.size, self.puzzle[row][col])
+                    s += self.hFunc((col, row), self.getSnailCoords(self.size, self.puzzle[row][col]))
+        if s == 0:
             self.isSolved = True
         return sum
 
     def getEmptyCoords(self):
-        for y in range(self.size):
-            for x in range(self.size):
-                if self.puzzle[y][x] == 0:
-                    return x, y
-                    
+        c = np.where(self.puzzle == 0)
+        return c[1][0], c[0][0]                    
 
     @staticmethod
     def getSnailCoords(size, value):
@@ -45,6 +52,6 @@ class Node():
             value -= span
             r += 1
             span -= r % 2
-        d, m = divaluemod(r, 4)
+        d, m = divmod(r, 4)
         c = size - 1 - d
         return [d + value - 1, c, c - value, d][m], [d, d + value, c, c - value][m]
