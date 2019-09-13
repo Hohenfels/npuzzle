@@ -1,8 +1,8 @@
 # import numpy
-from Classes.Heuristics import Heuristics
+from heuristics import *
 from Classes.Node import Node
 
-heuristics = {1 : Heuristics.manhattan }
+heuristics = {1: manhattan}
 
 def solvePuzzle(puzzle, size, heuristic):
 
