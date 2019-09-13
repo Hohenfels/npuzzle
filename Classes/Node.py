@@ -9,7 +9,7 @@ class Node():
 
     @property
     def hash(self):
-        return hash(self.puzzle)
+        return str(self.puzzle)
 
     @property
     def score(self):

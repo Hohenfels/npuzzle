@@ -1,6 +1,5 @@
 from Classes.Parser import Parser
-from researchTree import solvePuzzle
-# import heuristics
+import researchTree
 import argparse
 
 
@@ -16,5 +15,5 @@ if __name__ == "__main__":
     args = getArgs()
     parse = Parser(args.fpath)
     parse.checkIntegrity()
-    puzzle, size = parse.getPuzzle
-    solvePuzzle(puzzle, size, args.heuristic)
+    puzzle, size = parse.getPuzzle()
+    researchTree.solvePuzzle(puzzle, size, args.heuristic)

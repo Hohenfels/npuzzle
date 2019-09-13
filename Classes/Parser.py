@@ -1,5 +1,5 @@
 from Classes.ErrorsModule.Errors import *
-
+import numpy as np
 
 class Parser:
     puzzle = []
@@ -23,7 +23,6 @@ class Parser:
 
     @staticmethod
     def checkNbValidity(self):
-        print(self.puzzle)
         for i, line in enumerate(self.puzzle):
             line = line.split(' ')
             if len(line) == 1:
@@ -49,6 +48,5 @@ class Parser:
                     if occur > 2:
                         raise(OccurenceError(nb, occur))
 
-    @property
     def getPuzzle(self):
-        return self.puzzle, self.size
+        return np.array([list(map(int, filter(None, p.split(' ')))) for p in self.puzzle[1:]]), self.size
