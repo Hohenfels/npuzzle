@@ -2,7 +2,7 @@ from Classes.Node import Node
 import heuristics as hr
 import numpy as np
 
-heuristics = {1: hr.manhattan}
+heuristics = {1: hr.manhattan, 2: hr.euclidian, 3: hr.diagonal}
 
 def solvePuzzle(puzzle, size, heuristic):
 
@@ -12,19 +12,33 @@ def solvePuzzle(puzzle, size, heuristic):
 
     bestNode = initialNode
     seen = [initialNode.hash]
-    
+
     while not bestNode.solved:
         nodes = getNodeChildren(bestNode, seen)
         seen.extend([n.hash for n in nodes])
     
         if not nodes:
+            node = bestNode
+            while node.parent:
+                print(node)
+                node = node.parent
             print('Something went wrong, need to rollback')
             exit()
     
         scores = [n.score for n in nodes]
+        
+        print("BestNode :", bestNode)
+        print("Children :", nodes)
+        print("Scores :", scores)
+        
+        
         bestNode = nodes[scores.index(min(scores))]
+        print("BestNode :", bestNode)
 
-    return node
+
+        exit()
+
+    return bestNode
 
 def getNodeChildren(parent, seen): ## parent is a Node
     c = parent.getEmptyCoords()

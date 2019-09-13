@@ -33,12 +33,10 @@ class Node():
         for col in range(self.size):
             for row in range(self.size):
                 if self.puzzle[col][row] != 0:
-                    # coords = self.getSnailCoords(self.size, self.puzzle[row][col])
-                    self.getSnailCoords(self.size, self.puzzle[row][col])
-                    s += self.hFunc((col, row), self.getSnailCoords(self.size, self.puzzle[row][col]))
+                    s += self.hFunc((row, col), self.getSnailCoords(self.size, self.puzzle[row][col]))
         if s == 0:
             self.isSolved = True
-        return sum
+        return s
 
     def getEmptyCoords(self):
         c = np.where(self.puzzle == 0)
