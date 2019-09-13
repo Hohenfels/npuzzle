@@ -23,15 +23,15 @@ class Parser:
 
     @staticmethod
     def checkNbValidity(self):
+        print(self.puzzle)
         for i, line in enumerate(self.puzzle):
             line = line.split(' ')
             if len(line) == 1:
                 if int(line[0]) < 0:
                     raise(PuzzleSizeError())
             for nb in line:
-                if int(nb) != 0:
-                    if int(nb) < 0:
-                        raise(NumberError(i, nb))
+                if nb != '' and int(nb) < 0:
+                    raise(NumberError(i, nb))
 
     @staticmethod
     def puzzleValidity(self):
