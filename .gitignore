@@ -12,3 +12,4 @@ random.txt
 *.pyc
 */*.pyc
 */*/*.pyc
+output.txt

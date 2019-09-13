@@ -15,29 +15,23 @@ def solvePuzzle(puzzle, size, heuristic):
 
     while not bestNode.solved:
         nodes = getNodeChildren(bestNode, seen)
-        seen.extend([n.hash for n in nodes])
     
         if not nodes:
-            node = bestNode
-            while node.parent:
-                print(node)
-                node = node.parent
-            print('Something went wrong, need to rollback')
-            exit()
-    
-        scores = [n.score for n in nodes]
-        
-        print("BestNode :", bestNode)
-        print("Children :", nodes)
-        print("Scores :", scores)
-        
-        
-        bestNode = nodes[scores.index(min(scores))]
-        print("BestNode :", bestNode)
+            bestNode = bestNode.parent
+            # print('Something went wrong, need to rollback')
+            # exit()
+        else:
+            scores = [n.score for n in nodes]
+            
+            # print("BestNode :", bestNode)
+            # print("Children :", nodes)
+            # print("Scores :", scores)
+            
+            
+            bestNode = nodes[scores.index(min(scores))]
+            seen.append(bestNode.hash)
 
-
-        exit()
-
+    printPath(bestNode)
     return bestNode
 
 def getNodeChildren(parent, seen): ## parent is a Node
@@ -58,3 +52,16 @@ def getNodeChildren(parent, seen): ## parent is a Node
             newChildren.append(newChild)
 
     return newChildren
+
+def printPath(node):
+    it = 0
+    n = []
+
+    while node:
+        it += 1
+        n.append(node)
+        node = node.parent
+
+    for ni in n[::-1]:
+        print(ni, "\n")
+    print("iterations: ", it)
