@@ -9,3 +9,6 @@ Classes/__pycache__/Parser.cpython-37.pyc
 __pycache__
 */__pycache__
 random.txt
+*.pyc
+*/*.pyc
+*/*/*.pyc
