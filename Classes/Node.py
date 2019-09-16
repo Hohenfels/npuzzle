@@ -52,4 +52,4 @@ class Node():
             span -= r % 2
         d, m = divmod(r, 4)
         c = size - 1 - d
-        return [d + value - 1, c, c - value, d][m], [d, d + value, c, c - value][m]
+        return [d, d + value, c, c - value][m], [d + value - 1, c, c - value, d][m]
