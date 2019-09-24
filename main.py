@@ -17,5 +17,5 @@ if __name__ == "__main__":
     parse = Parser(args.fpath)
     parse.checkIntegrity()
     puzzle, size = parse.getPuzzle()
-    isSovable(puzzle, size)
-    # researchTree.solvePuzzle(puzzle, size, args.heuristic)
+    # isSovable(puzzle, size)
+    researchTree.solvePuzzle(puzzle, size, args.heuristic)

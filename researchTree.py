@@ -1,5 +1,6 @@
 from Classes.Node import Node
 import heuristics as hr
+
 import numpy as np
 
 heuristics = {1: hr.manhattan, 2: hr.euclidian, 3: hr.diagonal}
@@ -9,9 +10,10 @@ def solvePuzzle(puzzle, size, heuristic):
     #### TODO: Check if puzzle is solvable
 
     initialNode = Node(heuristics.get(heuristic), puzzle, size = size)
+    children = allocChildren(initialNode)
 
     bestNode = initialNode
-    seen = [initialNode.hash]
+    seen = set([initialNode.hash])
 
     while not bestNode.solved:
         nodes = getNodeChildren(bestNode, seen)
@@ -21,18 +23,24 @@ def solvePuzzle(puzzle, size, heuristic):
             # print('Something went wrong, need to rollback')
             # exit()
         else:
-            scores = [n.score for n in nodes]
+            scores = np.array([n.score for n in nodes])
             
             # print("BestNode :", bestNode)
             # print("Children :", nodes)
             # print("Scores :", scores)
             
             
-            bestNode = nodes[scores.index(min(scores))]
-            seen.append(bestNode.hash)
+            bestNode = nodes[np.argmin(scores)]
+            seen.add(bestNode.hash)
 
     printPath(bestNode)
     return bestNode
+
+def allocChildren(node):
+    children = []
+    for _ in range(4):
+        children.append(Node(node.hFunc, np.copy(node.puzzle), node))
+    return np.array(children)
 
 def getNodeChildren(parent, seen): ## parent is a Node
     c = parent.getEmptyCoords()
