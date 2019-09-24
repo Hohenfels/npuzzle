@@ -1,4 +1,5 @@
 from Classes.Parser import Parser
+from isSolvable import isSovable
 import researchTree
 import argparse
 
@@ -16,4 +17,5 @@ if __name__ == "__main__":
     parse = Parser(args.fpath)
     parse.checkIntegrity()
     puzzle, size = parse.getPuzzle()
-    researchTree.solvePuzzle(puzzle, size, args.heuristic)
+    isSovable(puzzle, size)
+    # researchTree.solvePuzzle(puzzle, size, args.heuristic)
