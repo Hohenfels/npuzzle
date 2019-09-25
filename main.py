@@ -6,8 +6,10 @@ import argparse
 
 def getArgs():
     parser = argparse.ArgumentParser()
-    parser.add_argument("fpath", type = str, help = "File path of N-puzzle")
-    parser.add_argument("heuristic", type = int, default = 1, choices = [1, 2, 3], help = "1 - Manhattan\n2 - Pouet")
+    parser.add_argument("fpath", type=str, help="File path of N-puzzle")
+    parser.add_argument("heuristic", type=int, default=1, choices=[1, 2, 3], help="1 - Manhattan\n"
+                                                                                  "2 - Euclidian\n"
+                                                                                  "3 - Diagonal")
     args = parser.parse_args()
     return args
 
@@ -17,5 +19,5 @@ if __name__ == "__main__":
     parse = Parser(args.fpath)
     parse.checkIntegrity()
     puzzle, size = parse.getPuzzle()
-    # isSovable(puzzle, size)
-    researchTree.solvePuzzle(puzzle, size, args.heuristic)
+    isSovable(puzzle, size)
+    # researchTree.solvePuzzle(puzzle, size, args.heuristic)

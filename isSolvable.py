@@ -50,14 +50,15 @@ def isSovable(array, size):
     isSolvable = False
     spiralArray = createSpiralArray(array, size)
     nbInversion = getNbInversion(spiralArray)
-    if size % 2 and nbInversion % 2 == 0:
-        print("Is solvable")
-    elif not size % 2:
-        #TODO verif si 0 est sur une ligne pair et nb inversion impair
-        #TODO verif si 0 est une ligne impair et nb inversion est pair
-        print("jtebez")
-    else:
-        print("Not solvable")
+    if size % 2 and not nbInversion % 2:
+        isSolvable = True
+    # elif not size % 2:
+    #
+    #     #TODO verif si 0 est sur une ligne pair et nb inversion impair
+    #     #TODO verif si 0 est une ligne impair et nb inversion est pair
+    #     print("jtebez")
+    # else:
+    #     print("Not solvable")
 
 
 
