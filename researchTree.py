@@ -2,6 +2,9 @@ from Classes.Node import Node
 import heuristics as hr
 
 import numpy as np
+from collections import deque
+import timeit
+
 
 heuristics = {1: hr.manhattan, 2: hr.euclidian, 3: hr.diagonal, 4: hr.test}
 
@@ -9,38 +12,32 @@ def solvePuzzle(puzzle, size, heuristic):
 
     #### TODO: Check if puzzle is solvable
 
-    initialNode = Node(heuristics.get(heuristic), puzzle, size = size)
-    children = allocChildren(initialNode)
+    node = Node(heuristics.get(heuristic), puzzle, size = size)
 
-    bestNode = initialNode
-    seen = set([initialNode.hash])
+    seen = set([node.hash])
+    queue = deque([node])
+    i = 0
 
-    while not bestNode.solved:
-        nodes = getNodeChildren(bestNode, seen)
-    
-        if not nodes:
-            bestNode = bestNode.parent
-            # print('Something went wrong, need to rollback')
-            # exit()
-        else:
-            scores = np.array([n.score for n in nodes])
-            
-            # print("BestNode :", bestNode)
-            # print("Children :", nodes)
-            # print("Scores :", scores)
-            
-            
-            bestNode = nodes[np.argmin(scores)]
-            seen.add(bestNode.hash)
+    while not node.solved:
+        i += 1
+        queue = deque(list(sorted(queue, key = lambda n: n.score)))
+        # print([n.score for n in queue])
+        node = queue.popleft()
+        
+        for n in getNodeChildren(node, seen):
+            seen.add(n.hash)
+            queue.append(n)
 
-    printPath(bestNode)
-    return bestNode
 
-def allocChildren(node):
-    children = []
-    for _ in range(4):
-        children.append(Node(node.hFunc, np.copy(node.puzzle), node))
-    return np.array(children)
+
+        #### DEBUG ####  
+        # print("node :", node)
+        # print("Children :", children)
+        # print("Scores :", scores)
+
+    printPath(node)
+    print("real it",i)
+    return node
 
 def getNodeChildren(parent, seen): ## parent is a Node
     c = parent.getEmptyCoords()
