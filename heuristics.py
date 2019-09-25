@@ -8,3 +8,6 @@ def euclidian(c1, c2):
 
 def diagonal(c1, c2):
     return max(abs(c1[0] - c2[0]), abs(c1[1] - c2[1]))
+
+def test(c1, c2):
+    return int(c1[0] != c2[0] or c1[1] != c2[1])

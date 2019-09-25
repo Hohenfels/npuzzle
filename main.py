@@ -7,7 +7,7 @@ import argparse
 def getArgs():
     parser = argparse.ArgumentParser()
     parser.add_argument("fpath", type = str, help = "File path of N-puzzle")
-    parser.add_argument("heuristic", type = int, default = 1, choices = [1, 2, 3], help = "1 - Manhattan\n2 - Pouet")
+    parser.add_argument("heuristic", type = int, default = 1, choices = [1, 2, 3, 4], help = "1 - Manhattan\n2 - Pouet")
     args = parser.parse_args()
     return args
 

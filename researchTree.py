@@ -3,7 +3,7 @@ import heuristics as hr
 
 import numpy as np
 
-heuristics = {1: hr.manhattan, 2: hr.euclidian, 3: hr.diagonal}
+heuristics = {1: hr.manhattan, 2: hr.euclidian, 3: hr.diagonal, 4: hr.test}
 
 def solvePuzzle(puzzle, size, heuristic):
 
