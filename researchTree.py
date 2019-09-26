@@ -15,18 +15,19 @@ def solvePuzzle(puzzle, size, heuristic):
     node = Node(heuristics.get(heuristic), puzzle, size = size)
 
     seen = set([node.hash])
-    queue = deque([node])
+    queue = set([node])
     i = 0
 
     while not node.solved:
         i += 1
-        queue = deque(list(sorted(queue, key = lambda n: n.score)))
-        # print([n.score for n in queue])
-        node = queue.popleft()
+        # queue = deque(list(sorted(queue, key = lambda n: n.score)))
+        # # print([n.score for n in queue])
+        node = min(queue, key = lambda n: n.score)
+        queue.remove(node)
         
-        for n in getNodeChildren(node, seen):
+        for n in getNodeChildren(node, seen, queue):
             seen.add(n.hash)
-            queue.append(n)
+            queue.add(n)
 
 
 
@@ -39,7 +40,7 @@ def solvePuzzle(puzzle, size, heuristic):
     print("real it",i)
     return node
 
-def getNodeChildren(parent, seen): ## parent is a Node
+def getNodeChildren(parent, seen, q): ## parent is a Node
     c = parent.getEmptyCoords()
     newChildren = []
 
