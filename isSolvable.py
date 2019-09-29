@@ -5,8 +5,9 @@ UP = 3
 
 
 def createSpiralArray(array, n):
+    print(array)
     t, b, l, r = 0, n - 1, 0, n - 1
-    direction = RIGHT
+    direction = 0
     newArray = []
     while t <= b and l <= r:
         if direction is RIGHT:
@@ -49,9 +50,11 @@ def getNbInversion(array):
 def isSovable(array, size):
     isSolvable = False
     spiralArray = createSpiralArray(array, size)
-    nbInversion = getNbInversion(spiralArray)
-    if size % 2 and not nbInversion % 2:
-        isSolvable = True
+    print(spiralArray)
+    print(array)
+    # nbInversion = getNbInversion(spiralArray)
+    # if size % 2 and not nbInversion % 2:
+    #     isSolvable = True
     # elif not size % 2:
     #
     #     #TODO verif si 0 est sur une ligne pair et nb inversion impair
