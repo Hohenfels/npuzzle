@@ -40,7 +40,6 @@ def createTarget(size):
         s += 2 * n + 2 * (n - 2)
     return np.array(target)
 
-
 if __name__ == "__main__":
     args = getArgs()
     parser = Parser(args.fpath)

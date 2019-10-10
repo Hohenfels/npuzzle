@@ -5,7 +5,7 @@ class Node:
     def __init__(self, hFunc, state, parent=None, size=None):
         self.state = state
         self.parent = parent
-        self.g = 1 if not parent else parent.g + 1
+        self.g = 2147483647 if not parent else parent.g - 1
         self.size = size if size else parent.size
         self.hFunc = hFunc
         self.isSolved = False

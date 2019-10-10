@@ -9,18 +9,19 @@ heuristics = {1: manhattan, 2: euclidian}
 def solvePuzzle(grid, size, target, heuristic):
     i = 0
     node = Node(heuristics.get(heuristic), grid, size=size)
-    node = (node.score, node)
+    node = (node.score, node.g, node)
     stateTree = [node]
-    seen = {node[1].hash}
+    seen = {node[2].hash}
     heapify(stateTree)
 
-    while not str(node[1].state.ravel()) == str(target.ravel()):
+    while not str(node[2].state.ravel()) == str(target.ravel()):
         i += 1
         node = heappop(stateTree)
-        print(node[1].state)
-        for child in getChildren(node[1], seen):
-            heappush(stateTree, (child.score, child))
+        for child in getChildren(node[2], seen):
+            heappush(stateTree, (child.score, child.g, child))
             seen.add(child.hash)
+
+    #printPath(node)
 
 
 def getChildren(parent, seen):
@@ -43,6 +44,7 @@ def getChildren(parent, seen):
 
 
 def printPath(node):
+    node = node[2]
     it = 0
     n = []
 
