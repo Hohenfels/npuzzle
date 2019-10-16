@@ -23,13 +23,13 @@ private:
 
     size_t              _g;
     size_t              getHeuristicSum();
-    Coord const         getSnailCoords(size_t val);
 
 public:
     Node(unsigned int (*hFunc)(const Coord &, const Coord &), std::vector<int> state, size_t size);
-    Node(Node &src);
+    Node(Node & src);
 
     virtual ~Node();
+    Coord const         getSnailCoords(size_t val);
 
     bool                isSolved;
 

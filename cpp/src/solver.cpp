@@ -11,16 +11,16 @@ struct PQCMP
     }
 };
 
-Node    *solvePuzzle(int hFuncIdx, size_t size, std::vector<int> grid)
+void    solvePuzzle(int hFuncIdx, size_t size, std::vector<int> grid)
 {
     unsigned int (*heuristics[1])(const Coord &, const Coord &) = {Heuristics::Manhattan};
     std::priority_queue<Node*, std::vector<Node*>, PQCMP> queue;
-    std::vector<size_t>  seen;
+    std::map<size_t, Node*>     seen;
     Node    *node = new Node(heuristics[hFuncIdx], grid, size); 
     
     node->processScore();
 
-    seen.push_back(node->getHash());
+    seen.insert(std::pair<size_t, Node*>(node->getHash(), node));
     queue.push(node);
 
     while (!node->isSolved)
@@ -32,14 +32,15 @@ Node    *solvePuzzle(int hFuncIdx, size_t size, std::vector<int> grid)
         {
             n->processScore();
             queue.push(n);
-            seen.push_back(n->getHash());
+            seen.insert(std::pair<size_t, Node*>(n->getHash(), n));
         }
     }
 
-    return node;
+    printPath(node);
+    deleteNodes(seen);
 }
 
-std::vector<Node *>   createChildren(Node *parent, std::vector<size_t>& seen)
+std::vector<Node *>   createChildren(Node *parent, std::map<size_t, Node*>& seen)
 {
     std::vector<Node *>   children;
     Coord const         emptyCoord = parent->getEmptyCoord();
@@ -58,8 +59,10 @@ std::vector<Node *>   createChildren(Node *parent, std::vector<size_t>& seen)
         
         std::swap(newChild->getState()[emptyCoord.y * parent->getSize() + emptyCoord.x], newChild->getState()[newCoords.y * parent->getSize() + newCoords.x]);
 
-        if (std::find(seen.begin(), seen.end(), newChild->getHash()) == seen.end())
+        if (seen.find(newChild->getHash()) == seen.end())
             children.push_back(newChild);
+        else
+            delete newChild;
     }
 
     return children;
@@ -81,4 +84,10 @@ void    printPath(Node *node)
     for (Node *n : path)
         std::cout << *n << "\n";
     std::cout << "Path length: " << it << "\n";
+}
+
+void    deleteNodes(std::map<size_t, Node*>& seen)
+{
+    for (auto &n : seen)
+        delete n.second;
 }
