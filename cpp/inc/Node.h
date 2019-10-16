@@ -4,6 +4,7 @@
 #include <vector>
 #include <algorithm>
 #include <iostream>
+#include <stdlib.h>
 
 #include "solver.h"
 
@@ -15,19 +16,18 @@ class Node
 private:
     Node() = delete;
     std::vector<int>    _state;
-    Node const          *_parent;
-    size_t              _g;
+    Node                *_parent;
     size_t              _size;
     size_t              _score;
     unsigned int        (*_heuristic)(const Coord &, const Coord &);
 
+    size_t              _g;
     size_t              getHeuristicSum();
     Coord const         getSnailCoords(size_t val);
-    size_t              processScore();
 
 public:
     Node(unsigned int (*hFunc)(const Coord &, const Coord &), std::vector<int> state, size_t size);
-    Node(const Node &src);
+    Node(Node &src);
 
     virtual ~Node();
 
@@ -36,12 +36,13 @@ public:
     inline std::vector<int>&    getState() { return this->_state; }
     inline size_t               getScore() const { return this->_score; }
     inline size_t               getSize() const { return this->_size; }
-    inline const Node           *getAddr() const { return this; }
+    inline size_t               getG() const { return this->_g; }
+    inline Node                 *getParent() const { return this->_parent; }
 
     Coord const     getEmptyCoord();
-    void            processNode();
+    size_t          processScore();
+    size_t          getHash() const;
     
-
     const Node&         operator=(Node const & rhs);
 
 };

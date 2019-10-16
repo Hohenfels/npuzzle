@@ -1,13 +1,14 @@
 #include "../inc/Node.h"
 
-Node::Node(unsigned int (*hFunc)(const Coord &, const Coord &), std::vector<int> state, size_t size) : _size(size), _heuristic(hFunc), _parent(nullptr), _state(state), isSolved(false), _score(0)
+Node::Node(unsigned int (*hFunc)(const Coord &, const Coord &), std::vector<int> state, size_t size) : _size(size), _heuristic(hFunc), _parent(nullptr), _state(state), isSolved(false), _score(0), _g(1)
 {
 }
 
-Node::Node(Node const & src)
+Node::Node(Node& src)
 {
     *this = src;
     this->_parent = &src;
+    this->_score = 0;
     ++this->_g;
 }
 
@@ -30,7 +31,8 @@ size_t  Node::getHeuristicSum()
     size_t  sum = 0;
 
     for (size_t i = 0; i < this->_state.size(); i++)
-        sum += this->_heuristic({static_cast<int>(i % this->_size), static_cast<int>(i / this->_size)}, this->getSnailCoords(this->_state[i]));
+        if (this->_state[i] != 0)
+            sum += this->_heuristic({static_cast<int>(i % this->_size), static_cast<int>(i / this->_size)}, this->getSnailCoords(this->_state[i]));
 
     return sum;
 }
@@ -71,15 +73,21 @@ Coord const     Node::getEmptyCoord()
    return {static_cast<int>(idx % this->_size), static_cast<int>(idx / this->_size)};
 }
 
-size_t  Node::processScore()
+size_t          Node::getHash() const
 {
-    return this->_g + this->getHeuristicSum();
+    std::string     s;
+
+    for (auto &v : this->_state)
+        s.push_back(static_cast<char>(v + 48));
+
+    return std::hash<std::string>()(s);
 }
 
-void    Node::processNode()
+size_t  Node::processScore()
 {
-    this->_score = this->getScore();
-    this->isSolved = (this->_score ? true : false);
+    size_t  heuristicSum = this->getHeuristicSum();
+    this->_score = this->_g + heuristicSum;
+    this->isSolved = (heuristicSum ? false : true);
 }
 
 std::ostream&       operator<<(std::ostream& o, Node& n)
@@ -87,7 +95,7 @@ std::ostream&       operator<<(std::ostream& o, Node& n)
     std::vector<int>    puzzle = n.getState();
     size_t              size = n.getSize();
     
-    o << "Score: " << n.getScore() << "\n";
+    o << "Score:" << n.getScore() << "\n";
     for (int i = 0; i < puzzle.size(); i++)
         o << puzzle[i] << (!((i + 1) % size) ? "\n" : " ");
     

@@ -1,57 +1,84 @@
 #include "Node.h"
 #include "heuristics.h"
 
-void    solvePuzzle(int hFuncIdx, size_t size, std::vector<int> grid)
+struct PQCMP
+{
+    bool operator()(const ::Node* lhs, const ::Node* rhs)
+    {
+        if (lhs->getScore() == rhs->getScore())
+            return lhs->getG() < rhs->getG();
+        return lhs->getScore() > rhs->getScore();
+    }
+};
+
+Node    *solvePuzzle(int hFuncIdx, size_t size, std::vector<int> grid)
 {
     unsigned int (*heuristics[1])(const Coord &, const Coord &) = {Heuristics::Manhattan};
-
-    auto cmp = [](Node& left, Node& right) { return left.getScore() < right.getScore(); };
-    std::priority_queue<Node, std::vector<Node>, decltype(cmp)> queue(cmp);
+    std::priority_queue<Node*, std::vector<Node*>, PQCMP> queue;
+    std::vector<size_t>  seen;
+    Node    *node = new Node(heuristics[hFuncIdx], grid, size); 
     
-    std::vector<Node const *>  seen;
+    node->processScore();
 
-    Node    node(heuristics[hFuncIdx], grid, size);
-    
-    seen.push_back(node.getAddr());
+    seen.push_back(node->getHash());
     queue.push(node);
 
-    while (!node.isSolved)
+    while (!node->isSolved)
     {
         node = queue.top();
         queue.pop();
 
-        for (auto &n : createChildren(node, seen))
+        for (Node *n : createChildren(node, seen))
         {
-            n.processNode();
+            n->processScore();
             queue.push(n);
-            seen.push_back(n.getAddr());
+            seen.push_back(n->getHash());
         }
     }
 
-    return;
+    return node;
 }
 
-std::vector<Node>   createChildren(Node parent, std::vector<Node const *>& seen)
+std::vector<Node *>   createChildren(Node *parent, std::vector<size_t>& seen)
 {
-    std::vector<Node>   children;
-    Coord const         emptyCoord = parent.getEmptyCoord();
+    std::vector<Node *>   children;
+    Coord const         emptyCoord = parent->getEmptyCoord();
     static Coord        moves[4] = {{0, 1}, {0, -1}, {-1, 0}, {1, 0}};
     Coord               newCoords;
-    std::shared_ptr<Node>   newChild;
+    Node                *newChild;
+
 
     for (auto m : moves)
     {
         newCoords = {emptyCoord.x + m.x, emptyCoord.y + m.y};
-        if (newCoords.x < 0 || newCoords.x == parent.getSize() ||
-                newCoords.y < 0 || newCoords.y == parent.getSize())
+        if (newCoords.x < 0 || newCoords.x == parent->getSize() ||
+                newCoords.y < 0 || newCoords.y == parent->getSize())
             continue;
-        newChild = std::make_shared<Node>(Node(parent));
+        newChild = new Node(*parent);
         
-        std::swap(newChild->getState()[emptyCoord.y * parent.getSize() + emptyCoord.x], newChild->getState()[newCoords.y * parent.getSize() + newCoords.x]);
+        std::swap(newChild->getState()[emptyCoord.y * parent->getSize() + emptyCoord.x], newChild->getState()[newCoords.y * parent->getSize() + newCoords.x]);
 
-        if (std::find(seen.begin(), seen.end(), newChild->getAddr()) == seen.end())
-            children.push_back(*newChild);
+        if (std::find(seen.begin(), seen.end(), newChild->getHash()) == seen.end())
+            children.push_back(newChild);
     }
 
     return children;
+}
+
+void    printPath(Node *node)
+{
+    std::vector<Node*>  path;
+    size_t              it = 0;
+
+    while (node->getParent())
+    {
+        path.push_back(node);
+        node = node->getParent();
+        ++it;
+    }
+
+    std::reverse(path.begin(), path.end());
+    for (Node *n : path)
+        std::cout << *n << "\n";
+    std::cout << "Path length: " << it << "\n";
 }
