@@ -1,3 +1,9 @@
+class SolvabilityError(Exception):
+    def __init__(self):
+        print("Puzzle is not solvable")
+        exit()
+
+
 class NumberError(Exception):
     def __init__(self, i, nb):
         print("Value Error at line {}: {} is under zero\n"

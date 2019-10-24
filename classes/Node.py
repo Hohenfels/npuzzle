@@ -5,16 +5,10 @@ class Node:
     def __init__(self, hFunc, state, parent=None, size=None):
         self.state = state
         self.parent = parent
-        self.g = 2147483647 if not parent else parent.g - 1
+        self.g = 1 if not parent else parent.g + 1
         self.size = size if size else parent.size
         self.hFunc = hFunc
         self.isSolved = False
-
-    def __str__(self):
-        return str(self.state)
-
-    def __repr__(self):
-        return self.__str__()
 
     @property
     def hash(self):
@@ -40,7 +34,8 @@ class Node:
         return s
 
     def getEmptyCoords(self):
-        c = np.where(self.state == 0)
+        state = np.array(self.state)
+        c = np.where(state == 0)
         return c[1][0], c[0][0]
 
     @staticmethod
@@ -60,3 +55,9 @@ class Node:
 
     def __eq__(self, other):
         return self.score
+
+    def __str__(self):
+        return str(self.state)
+
+    def __repr__(self):
+        return self.__str__()
