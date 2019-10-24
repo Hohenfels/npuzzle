@@ -13,3 +13,4 @@ random.txt
 */*.pyc
 */*/*.pyc
 output*.txt
+.vscode

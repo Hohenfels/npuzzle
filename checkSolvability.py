@@ -57,9 +57,12 @@ def getPermuts(array):
 
 def checkSolvability(node, size):
     array = createOneDimPuzzle(node.state, size)
+    print(array)
     nbPermut = getPermuts(array)
-    if size % 2 != 0 and nbPermut % 2 == 0:
-        return True
+    print(nbPermut)
+    if size % 2 != 0:
+        if nbPermut % 2 == 0:
+            return True
     else:
         coord = findPosIntab(array, 0)
         if nbPermut % 2 == 0 and coord % 2 or nbPermut % 2 and coord % 2 == 0:
