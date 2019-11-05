@@ -5,8 +5,15 @@
 #include "Node.h"
 #include "heuristics.h"
 #include "parser.h"
+#include <string.h>
 #include <iostream>
 
+struct CLOpt
+{
+    char    *filename;
+    int     heuristicIdx;
+    bool    greedy;
+};
 
 bool checkSolvability(std::vector<int> puzzle, int size);
 
