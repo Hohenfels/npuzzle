@@ -4,20 +4,13 @@ using namespace std;
 
 int     main(int argc, char** argv)
 {
-    std::vector<int>    puzzle(9);
-    Node *n;
-    Coord c;
-    puzzle = {1, 3, 6, 5, 2, 8, 7, 4, 0};
+    std::pair<std::vector<int>, size_t> puzzle;
 
-    // n = new Node(nullptr, puzzle, 4);
-    // c = n->getSnailCoords(13);
+    puzzle = Parser::parseFile(argv[1]);
 
-    // cout << c.x << "-" << c.y << "\n";
-
-    if (checkSolvability(puzzle, 3)) {
-        solvePuzzle(0, 3, puzzle);
-    }
-    else {
+    if (checkSolvability(puzzle.first, puzzle.second))
+        solvePuzzle(0, 3, puzzle.first);
+    else
         return 1;
-    }
+    return 0;
 }

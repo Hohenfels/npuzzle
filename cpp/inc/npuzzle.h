@@ -4,6 +4,7 @@
 #include "solver.h"
 #include "Node.h"
 #include "heuristics.h"
+#include "parser.h"
 #include <iostream>
 
 
