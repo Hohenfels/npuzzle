@@ -19,9 +19,10 @@ std::pair<std::vector<int>, size_t> Parser::parseFile(const char* file)
     while (std::getline(input, line))
     {
         lineIdx++;
-        if (line[0] == '#')
+        if (line.empty() || line[0] == '#')
             continue;
-        tokens = splitLine(splitLine(line, '#')[0], ' ');
+        if ((tokens = splitLine(splitLine(line, '#')[0], ' ')).size() != size)
+            parseError(file, lineIdx, "incorrect number of values in the row");
         for (auto t : tokens)
         {
             nb = std::strtol(t.c_str(), nullptr, 10);
@@ -59,6 +60,8 @@ size_t                      Parser::getSize(std::ifstream& fileStream, unsigned 
     while (getline(fileStream, line))
     {
         lineIdx++;
+        if (line.empty())
+            continue;
         if ((tokens = splitLine(line, '#')).size() > 1 || line[0] != '#')
         {
             if (splitLine(tokens[0], ' ').size() > 1)
