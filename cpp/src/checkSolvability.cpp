@@ -1,14 +1,5 @@
 #include "npuzzle.h"
 
-/*
-
-[[7 3 1]
- [2 0 6]
- [8 4 5]]
-
-7 3 1 2 0 6 8 4 5
-*/
-
 enum directions
 {
     RIGHT,
@@ -26,17 +17,13 @@ std::vector<int> createOneDim(std::vector<int> &puzzle, int &size)
     std::vector<int> newArray;
     directions direction = RIGHT; 
 
-    std::cout << "SIZE - 1 = : " << size - 1 << '\n';
-
     while (count != (size * size))
     {
         if (direction == RIGHT)
         {
-            std::cout << "\nRIGHT\n";
             while (i < span)
             {
-                // newArray.push_back(puzzle[y * size + i]);
-                std::cout << puzzle[y * size + i] << "\ni = " << i << " y = " << y << '\n';
+                newArray.push_back(puzzle[y * size + i]);
                 i++;
                 count++;
             }
@@ -45,11 +32,9 @@ std::vector<int> createOneDim(std::vector<int> &puzzle, int &size)
         }
         else if (direction == DOWN)
         {
-            std::cout << "\nDOWN " << i <<"\n";
             while (y < span)
             {
-                // newArray.push_back(puzzle[y * size + i]);
-                std::cout << puzzle[y * size + i] << "\ni = " << i << " y = " << y << '\n'; // y = 6 + 3
+                newArray.push_back(puzzle[y * size + i]);
                 y++;
                 count++;
             }
@@ -58,11 +43,9 @@ std::vector<int> createOneDim(std::vector<int> &puzzle, int &size)
         }
         else if (direction == LEFT)
         {
-            std::cout << "\nLEFT\n";
-            while (i >= 0 )
+            while (i >= size - span )
             {
-                std::cout << puzzle[y * size + i % size] << "\ni = " << i << " y = " << y << '\n';
-                // newArray.push_back(puzzle[y * size + i]);
+                newArray.push_back(puzzle[y * size + i]);
                 i--;
                 count++;
             }
@@ -71,17 +54,15 @@ std::vector<int> createOneDim(std::vector<int> &puzzle, int &size)
         }
         else if (direction == UP)
         {
-            std::cout << "\nUP\n";
-            while (y >= 0)
+            span--;
+            while (y >= size - span)
             {
-                std::cout << puzzle[y * size + i % size] << "\ni = " << i << " y = " << y << '\n';
-                // newArray.push_back(puzzle[y * size + i]);
+                newArray.push_back(puzzle[y * size + i]);
                 y--;
                 count++;
             }
             y++;
             i++;
-            exit(-1);
         }
         direction = static_cast<directions>((direction + 1) % 4);
     }
@@ -95,8 +76,8 @@ int findCoord(std::vector<int> puzzle, int value) {
 
 int getNbPermut(std::vector<int> puzzle) {
     int count = 0;
-    for (int i = 0; i < puzzle.size(); i++) {
-        for (int j = i + 1; j < puzzle.size(); j++) {
+    for (size_t i = 0; i < puzzle.size(); i++) {
+        for (size_t j = i + 1; j < puzzle.size(); j++) {
             if ((puzzle[i] != 0 && puzzle[j] != 0) && (puzzle[i] > puzzle[j]))
                 count++;
         }
@@ -106,11 +87,11 @@ int getNbPermut(std::vector<int> puzzle) {
 
 bool checkSolvability(std::vector<int> puzzle, int size) {
     std::vector<int> newArray = createOneDim(puzzle, size);
-    int nbPermut = getNbPermut(puzzle);
+    int nbPermut = getNbPermut(newArray);
     std::cout << '\n';
     std::cout << "size: " << size << "\n";
     std::cout << "permut: " << nbPermut << "\n";
-    int idxEmpty = findCoord(puzzle, 0);
+    int idxEmpty = findCoord(newArray, 0);
     if (size % 2 != 0)
     {   
         std::cout << "Is impair\n";

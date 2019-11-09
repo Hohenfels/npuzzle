@@ -32,7 +32,7 @@ std::pair<std::vector<int>, size_t> Parser::parseFile(const char* file)
         }
     }
     input.close();
-    try { checkPuzzleIntegrity(puzzle, integrity); }
+    try { checkPuzzleIntegrity(integrity); }
     catch(const std::exception& e) { parseError(file, 0, e.what()); }
     
     return std::make_pair(puzzle, size);
@@ -71,7 +71,7 @@ size_t                      Parser::getSize(std::ifstream& fileStream, unsigned 
         }
     }
 
-    if (ret <= 0L || ret == LONG_MAX || ret == LONG_MIN)
+    if (ret <= 0L || ret == static_cast<size_t>(LONG_MAX) || ret == static_cast<size_t>(LONG_MIN))
         throw Parser::ParserException("Invalid size (" + tokens[0] + ")");
 
     return ret;
@@ -83,7 +83,7 @@ void    Parser::checkNbIntegrity(const int& nb, std::vector<bool>& integrity, co
         throw Parser::ParserException("Undefined value (" + str_nb + ")");
     if (nb < 0)
         throw Parser::ParserException("Value under 0 (" + str_nb + ")");
-    if (nb > size * size - 1)
+    if (nb > static_cast<int>(size * size - 1))
         throw Parser::ParserException("Value too high (" + str_nb + ")");
     if (integrity[nb])
         throw Parser::ParserException("Value already declared (" + str_nb + ")");
@@ -91,12 +91,12 @@ void    Parser::checkNbIntegrity(const int& nb, std::vector<bool>& integrity, co
         integrity[nb] = true;
 }
 
-void    Parser::checkPuzzleIntegrity(const std::vector<int>& puzzle, const std::vector<bool>& integrity)
+void    Parser::checkPuzzleIntegrity(const std::vector<bool>& integrity)
 {
     std::vector<int>    missing;
     std::string         err("Missing value(s) in the given puzzle (");
 
-    for (int i = 0; i < integrity.size(); i++)
+    for (size_t i = 0; i < integrity.size(); i++)
         if (!integrity[i])
             missing.push_back(i);
 

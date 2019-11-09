@@ -16,7 +16,7 @@ namespace Parser
     size_t                              getSize(std::ifstream& fileStream, unsigned int& lineIdx);
     void                                parseError(const char *filename, unsigned int lineIdx, const char *err);
     void                                checkNbIntegrity(const int& nb, std::vector<bool>& integrity, const size_t& size, std::string& str_nb);
-    void                                checkPuzzleIntegrity(const std::vector<int>& puzzle, const std::vector<bool>& integrity);
+    void                                checkPuzzleIntegrity(const std::vector<bool>& integrity);
 
     class ParserException : public std::exception
     {
