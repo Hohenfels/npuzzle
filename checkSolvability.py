@@ -5,6 +5,7 @@ UP = 3
 
 
 def createOneDimPuzzle(array, n):
+    print(array)
     t, b, l, r = 0, n - 1, 0, n - 1
     direction = RIGHT
     newArray = []
@@ -34,6 +35,7 @@ def createOneDimPuzzle(array, n):
                 i -= 1
             l += 1
         direction = (direction + 1) % 4
+    print(newArray)
     return newArray
 
 
