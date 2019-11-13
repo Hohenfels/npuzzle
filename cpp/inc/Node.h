@@ -14,15 +14,15 @@ class Node
 private:
     Node() = delete;
     size_t              _size;
-    unsigned int        (*_heuristic)(const Coord &, const Coord &);
+    float               (*_heuristic)(const Coord &, const Coord &);
     Node                *_parent;
     std::vector<int>    _state;
-    size_t              _score;
+    float               _score;
     size_t              _g;
     size_t              getHeuristicSum();
 
 public:
-    Node(unsigned int (*hFunc)(const Coord &, const Coord &), std::vector<int> state, size_t size);
+    Node(float (*hFunc)(const Coord &, const Coord &), std::vector<int> state, size_t size);
     Node(Node & src);
 
     virtual ~Node();

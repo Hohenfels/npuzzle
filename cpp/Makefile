@@ -1,5 +1,5 @@
 NAME		=	npuzzle
-FLAGS		= 	-std=c++17 -Wall -Werror -Wextra
+FLAGS		= 	-std=c++17 -Wall -Werror -Wextra -Ofast
 COMPILER	=	g++
 
 DIR_INC		=	./inc/

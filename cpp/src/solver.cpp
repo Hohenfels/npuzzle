@@ -13,10 +13,12 @@ struct PQCMP
 
 void    solvePuzzle(int hFuncIdx, size_t size, std::vector<int> grid)
 {
-    unsigned int (*heuristics[1])(const Coord &, const Coord &) = {Heuristics::Manhattan};
+    float (*heuristics[2])(const Coord &, const Coord &) = {Heuristics::Manhattan, Heuristics::OutOfPlace};
     std::priority_queue<Node*, std::vector<Node*>, PQCMP> queue;
     std::map<size_t, Node*>     seen;
     Node    *node = new Node(heuristics[hFuncIdx], grid, size);
+    size_t      timeComplexity = 0;
+    size_t      spaceComplexity = 0;
     
     node->processScore();
 
@@ -33,10 +35,12 @@ void    solvePuzzle(int hFuncIdx, size_t size, std::vector<int> grid)
             n->processScore();
             queue.push(n);
             seen.insert(std::pair<size_t, Node*>(n->getHash(), n));
+            spaceComplexity++;
         }
+        timeComplexity++;
     }
 
-    printPath(node);
+    printPath(node, timeComplexity, spaceComplexity);
     deleteNodes(seen);
 }
 
@@ -49,7 +53,7 @@ std::vector<Node *>   createChildren(Node *parent, std::map<size_t, Node*>& seen
     Node                *newChild;
 
 
-    for (auto m : moves)
+    for (auto &m : moves)
     {
         newCoords = {emptyCoord.x + m.x, emptyCoord.y + m.y};
         if (newCoords.x < 0 || newCoords.x == static_cast<int>(parent->getSize()) ||
@@ -68,7 +72,7 @@ std::vector<Node *>   createChildren(Node *parent, std::map<size_t, Node*>& seen
     return children;
 }
 
-void    printPath(Node *node)
+void    printPath(Node *node, size_t timeComplexity, size_t spaceComplexity)
 {
     std::vector<Node*>  path;
     size_t              it = 0;
@@ -83,7 +87,7 @@ void    printPath(Node *node)
     std::reverse(path.begin(), path.end());
     for (Node *n : path)
         std::cout << *n << "\n";
-    std::cout << "Path length: " << it << "\n";
+    std::cout << "Path length: " << it << ", Time complexity: " << timeComplexity << ", Size complexity: " << spaceComplexity << "\n";
 }
 
 void    deleteNodes(std::map<size_t, Node*>& seen)

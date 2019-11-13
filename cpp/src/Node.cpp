@@ -1,6 +1,6 @@
 #include "../inc/Node.h"
 
-Node::Node(unsigned int (*hFunc)(const Coord &, const Coord &), std::vector<int> state, size_t size) : _size(size), _heuristic(hFunc), _parent(nullptr), _state(state), _score(0), _g(1), isSolved(false)
+Node::Node(float (*hFunc)(const Coord &, const Coord &), std::vector<int> state, size_t size) : _size(size), _heuristic(hFunc), _parent(nullptr), _state(state), _score(0), _g(1), isSolved(false)
 {
 }
 
@@ -85,8 +85,8 @@ size_t          Node::getHash() const
 
 void    Node::processScore()
 {
-    size_t  heuristicSum = this->getHeuristicSum();
-    this->_score = this->_g + heuristicSum;
+    float   heuristicSum = this->getHeuristicSum();
+    this->_score = static_cast<float>(this->_g) + heuristicSum;
     this->isSolved = (heuristicSum ? false : true);
 }
 

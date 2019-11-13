@@ -6,5 +6,6 @@
 
 namespace Heuristics
 {
-    unsigned int    Manhattan(const Coord &, const Coord &);
+    float   Manhattan(const Coord &, const Coord &);
+    float   OutOfPlace(const Coord &, const Coord &);
 }

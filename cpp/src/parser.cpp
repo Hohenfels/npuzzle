@@ -55,7 +55,7 @@ size_t                      Parser::getSize(std::ifstream& fileStream, unsigned 
 {
     std::string                 line;
     std::vector<std::string>    tokens;
-    size_t                      ret;
+    size_t                      ret = 0;
 
     while (getline(fileStream, line))
     {
@@ -71,7 +71,7 @@ size_t                      Parser::getSize(std::ifstream& fileStream, unsigned 
         }
     }
 
-    if (ret <= 0L || ret == static_cast<size_t>(LONG_MAX) || ret == static_cast<size_t>(LONG_MIN))
+    if (ret <= 0L || ret == static_cast<size_t>(LONG_MAX))
         throw Parser::ParserException("Invalid size (" + tokens[0] + ")");
 
     return ret;
