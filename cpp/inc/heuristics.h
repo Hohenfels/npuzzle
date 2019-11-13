@@ -6,6 +6,8 @@
 
 namespace Heuristics
 {
-    float   Manhattan(const Coord &, const Coord &);
-    float   OutOfPlace(const Coord &, const Coord &);
+    float   Manhattan(std::vector<int> state, size_t size);
+    float   ManhattanDistance(const Coord & c1, const Coord & c2);
+    
+    float   LinearConflict(std::vector<int> state, size_t size);
 }

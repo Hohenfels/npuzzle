@@ -1,6 +1,6 @@
 #include "../inc/Node.h"
 
-Node::Node(float (*hFunc)(const Coord &, const Coord &), std::vector<int> state, size_t size) : _size(size), _heuristic(hFunc), _parent(nullptr), _state(state), _score(0), _g(1), isSolved(false)
+Node::Node(float (*hFunc)(std::vector<int> state, size_t size), std::vector<int> state, size_t size) : _size(size), _heuristic(hFunc), _parent(nullptr), _state(state), _score(0), _g(1), isSolved(false)
 {
 }
 
@@ -28,22 +28,16 @@ Node::~Node()
 
 size_t  Node::getHeuristicSum()
 {
-    size_t  sum = 0;
-
-    for (size_t i = 0; i < this->_state.size(); i++)
-        if (this->_state[i] != 0)
-            sum += this->_heuristic({static_cast<int>(i % this->_size), static_cast<int>(i / this->_size)}, this->getSnailCoords(this->_state[i]));
-
-    return sum;
+    return this->_heuristic(this->_state, this->_size);
 }
 
-Coord const     Node::getSnailCoords(size_t val)
+Coord const     Node::getSnailCoords(size_t val, size_t size)
 {
     int     r = 0;
     int     d, m, c;
     size_t     x[4];
     size_t     y[4];
-    size_t  span = this->_size;
+    size_t  span = size;
 
     while (val > span)
     {
@@ -52,7 +46,7 @@ Coord const     Node::getSnailCoords(size_t val)
     }
     d = r / 4;
     m = r % 4;
-    c = this->_size - 1 - d;
+    c = size - 1 - d;
 
     x[0] = d;
     x[1] = d + val;

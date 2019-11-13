@@ -14,7 +14,7 @@ class Node
 private:
     Node() = delete;
     size_t              _size;
-    float               (*_heuristic)(const Coord &, const Coord &);
+    float               (*_heuristic)(std::vector<int> state, size_t size);
     Node                *_parent;
     std::vector<int>    _state;
     float               _score;
@@ -22,11 +22,11 @@ private:
     size_t              getHeuristicSum();
 
 public:
-    Node(float (*hFunc)(const Coord &, const Coord &), std::vector<int> state, size_t size);
+    Node(float (*hFunc)(std::vector<int> state, size_t size), std::vector<int> state, size_t size);
     Node(Node & src);
 
     virtual ~Node();
-    Coord const         getSnailCoords(size_t val);
+    static Coord const          getSnailCoords(size_t val, size_t size);
 
     bool                isSolved;
 
