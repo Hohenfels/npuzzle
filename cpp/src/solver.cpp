@@ -15,6 +15,7 @@ void    solvePuzzle(int hFuncIdx, size_t size, std::vector<int> grid, bool greed
     float (*heuristics[2])(std::vector<int> state, size_t size) = {Heuristics::Manhattan, Heuristics::LinearConflict};
     std::priority_queue<Node*, std::vector<Node*>, PQCMP> queue;
     std::map<size_t, Node*>     seen;
+    auto        begin = std::chrono::steady_clock::now();
     Node        *node = new Node(heuristics[hFuncIdx], grid, size);
     size_t      timeComplexity = 0;
     size_t      spaceComplexity = 0;
@@ -38,6 +39,8 @@ void    solvePuzzle(int hFuncIdx, size_t size, std::vector<int> grid, bool greed
         }
         timeComplexity++;
     }
+
+    std::cout << "solver ran in " << std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now() - begin).count() << "µs\n";
 
     printPath(node, timeComplexity, spaceComplexity);
     deleteNodes(seen);
