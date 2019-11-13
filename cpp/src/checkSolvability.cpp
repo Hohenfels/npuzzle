@@ -88,9 +88,6 @@ int getNbPermut(std::vector<int> puzzle) {
 bool checkSolvability(std::vector<int> puzzle, int size) {
     std::vector<int> newArray = createOneDim(puzzle, size);
     int nbPermut = getNbPermut(newArray);
-    std::cout << '\n';
-    std::cout << "size: " << size << "\n";
-    std::cout << "permut: " << nbPermut << "\n";
     int idxEmpty = findCoord(newArray, 0);
     if (size % 2 != 0)
     {   
