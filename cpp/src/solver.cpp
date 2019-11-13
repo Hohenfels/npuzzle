@@ -1,5 +1,4 @@
-#include "Node.h"
-#include "heuristics.h"
+#include "solver.h"
 
 struct PQCMP
 {
@@ -11,16 +10,16 @@ struct PQCMP
     }
 };
 
-void    solvePuzzle(int hFuncIdx, size_t size, std::vector<int> grid)
+void    solvePuzzle(int hFuncIdx, size_t size, std::vector<int> grid, bool greedy)
 {
     float (*heuristics[2])(std::vector<int> state, size_t size) = {Heuristics::Manhattan, Heuristics::LinearConflict};
     std::priority_queue<Node*, std::vector<Node*>, PQCMP> queue;
     std::map<size_t, Node*>     seen;
-    Node    *node = new Node(heuristics[hFuncIdx], grid, size);
+    Node        *node = new Node(heuristics[hFuncIdx], grid, size);
     size_t      timeComplexity = 0;
     size_t      spaceComplexity = 0;
     
-    node->processScore();
+    node->processScore(greedy);
 
     seen.insert(std::pair<size_t, Node*>(node->getHash(), node));
     queue.push(node);
@@ -32,7 +31,7 @@ void    solvePuzzle(int hFuncIdx, size_t size, std::vector<int> grid)
 
         for (Node *n : createChildren(node, seen))
         {
-            n->processScore();
+            n->processScore(greedy);
             queue.push(n);
             seen.insert(std::pair<size_t, Node*>(n->getHash(), n));
             spaceComplexity++;
@@ -76,6 +75,7 @@ void    printPath(Node *node, size_t timeComplexity, size_t spaceComplexity)
 {
     std::vector<Node*>  path;
     size_t              it = 0;
+    std::ofstream       output;
 
     while (node->getParent())
     {
@@ -83,11 +83,16 @@ void    printPath(Node *node, size_t timeComplexity, size_t spaceComplexity)
         node = node->getParent();
         ++it;
     }
+    path.push_back(node);
 
     std::reverse(path.begin(), path.end());
-    for (Node *n : path)
-        std::cout << *n << "\n";
-    std::cout << "Path length: " << it << ", Time complexity: " << timeComplexity << ", Size complexity: " << spaceComplexity << "\n";
+    output.open("path.txt");
+    if (output.good())
+        for (Node *n : path)
+            output << *n << "\n";
+
+    output.close();
+    std::cout << "Path length: " << it << "\nTime complexity: " << timeComplexity << "\nSpace complexity: " << spaceComplexity << "\nPath written to path.txt\n";
 }
 
 void    deleteNodes(std::map<size_t, Node*>& seen)

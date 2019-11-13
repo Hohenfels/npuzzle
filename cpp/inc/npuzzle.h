@@ -12,7 +12,7 @@ struct CLOpt
 {
     char    *filename;
     int     heuristicIdx;
-    bool    greedy;
+    bool    greedy = false;
 };
 
 bool checkSolvability(std::vector<int> puzzle, int size);

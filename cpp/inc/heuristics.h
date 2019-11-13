@@ -1,8 +1,10 @@
-#pragma once
+#ifndef __HEURISTIC_H__
+#define __HEURISTIC_H__
 
 #include "solver.h"
-
 #include <cmath>
+
+struct Coord;
 
 namespace Heuristics
 {
@@ -11,3 +13,5 @@ namespace Heuristics
     
     float   LinearConflict(std::vector<int> state, size_t size);
 }
+
+#endif

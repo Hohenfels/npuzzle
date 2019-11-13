@@ -26,7 +26,7 @@ Node::~Node()
 {
 }
 
-size_t  Node::getHeuristicSum()
+size_t  Node::getHeuristic()
 {
     return this->_heuristic(this->_state, this->_size);
 }
@@ -77,10 +77,10 @@ size_t          Node::getHash() const
     return std::hash<std::string>()(s);
 }
 
-void    Node::processScore()
+void    Node::processScore(bool greedy)
 {
-    float   heuristicSum = this->getHeuristicSum();
-    this->_score = static_cast<float>(this->_g) + heuristicSum;
+    float   heuristicSum = this->getHeuristic();
+    this->_score = (greedy ? 0 : static_cast<float>(this->_g)) + heuristicSum;
     this->isSolved = (heuristicSum ? false : true);
 }
 
@@ -88,8 +88,7 @@ std::ostream&       operator<<(std::ostream& o, Node& n)
 {
     std::vector<int>    puzzle = n.getState();
     size_t              size = n.getSize();
-    
-    o << "Score:" << n.getScore() << "\n";
+
     for (size_t i = 0; i < puzzle.size(); i++)
         o << puzzle[i] << (!((i + 1) % size) ? "\n" : " ");
     

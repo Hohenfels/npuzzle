@@ -35,7 +35,7 @@ CLOpt   parseCommmandLine(int ac, char **av)
 
     checkForUndefined(ac, av);
     if (CLOptionExists(av, av + ac, "--help") || ac == 1)
-        OptError("Usage: ./npuzzle -f {FILE} -h {1,2,3} [-g]\nHeuristics:\n1: Manhattan distance\n2: \n3: ");
+        OptError("Usage: ./npuzzle -f {FILE} -h {1,2,3} [-g]\nHeuristics:\n1: Manhattan distance\n2: Linear Conflicts\n3: ");
     if (CLOptionExists(av, av + ac, "-f") && getCLOption(av, av + ac, "-f"))
         opt.filename = getCLOption(av, av + ac, "-f");
     else
@@ -52,7 +52,6 @@ CLOpt   parseCommmandLine(int ac, char **av)
         OptError("No heuristic index.");
     if (CLOptionExists(av, av + ac, "-g"))
         opt.greedy = true;
-
     return opt;
 }
 
@@ -64,7 +63,7 @@ int     main(int argc, char** argv)
     puzzle = Parser::parseFile(opt.filename);
 
     if (checkSolvability(puzzle.first, puzzle.second))
-        solvePuzzle(opt.heuristicIdx, puzzle.second, puzzle.first);
+        solvePuzzle(opt.heuristicIdx, puzzle.second, puzzle.first, opt.greedy);
     else
         return 1;
     return 0;

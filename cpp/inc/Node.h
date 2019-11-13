@@ -8,6 +8,8 @@
 
 #include "solver.h"
 
+struct Coord;
+
 class Node 
 {
 
@@ -19,7 +21,7 @@ private:
     std::vector<int>    _state;
     float               _score;
     size_t              _g;
-    size_t              getHeuristicSum();
+    size_t              getHeuristic();
 
 public:
     Node(float (*hFunc)(std::vector<int> state, size_t size), std::vector<int> state, size_t size);
@@ -37,7 +39,7 @@ public:
     inline Node                 *getParent() const { return this->_parent; }
 
     Coord const     getEmptyCoord();
-    void            processScore();
+    void            processScore(bool greedy);
     size_t          getHash() const;
     
     const Node&         operator=(Node const & rhs);
