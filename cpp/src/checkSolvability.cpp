@@ -91,17 +91,13 @@ bool checkSolvability(std::vector<int> puzzle, int size) {
     int idxEmpty = findCoord(newArray, 0);
     if (size % 2 != 0)
     {   
-        std::cout << "Is impair\n";
         if (nbPermut % 2 == 0) {
-            std::cout << "Puzzle OK\n";
             return true;
         }
     }
     else
     {
-        std::cout << "IS PAIR\n";
         if ((nbPermut % 2 == 0 && idxEmpty % 2) || (nbPermut % 2 && idxEmpty % 2 == 0)) {
-            std::cout << "Puzzle OK\n";
             return true;
         }
     }
