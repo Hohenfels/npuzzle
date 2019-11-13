@@ -14,3 +14,5 @@ random.txt
 */*/*.pyc
 output*.txt
 .vscode
+cpp/obj
+cpp/npuzzle

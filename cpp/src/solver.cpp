@@ -52,8 +52,8 @@ std::vector<Node *>   createChildren(Node *parent, std::map<size_t, Node*>& seen
     for (auto m : moves)
     {
         newCoords = {emptyCoord.x + m.x, emptyCoord.y + m.y};
-        if (newCoords.x < 0 || newCoords.x == parent->getSize() ||
-                newCoords.y < 0 || newCoords.y == parent->getSize())
+        if (newCoords.x < 0 || newCoords.x == static_cast<int>(parent->getSize()) ||
+                newCoords.y < 0 || newCoords.y == static_cast<int>(parent->getSize()))
             continue;
         newChild = new Node(*parent);
         

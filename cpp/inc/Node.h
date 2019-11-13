@@ -8,19 +8,16 @@
 
 #include "solver.h"
 
-//typedef unsigned int (*heuristic)(const Coord &, const Coord &);
-
 class Node 
 {
 
 private:
     Node() = delete;
-    std::vector<int>    _state;
-    Node                *_parent;
     size_t              _size;
-    size_t              _score;
     unsigned int        (*_heuristic)(const Coord &, const Coord &);
-
+    Node                *_parent;
+    std::vector<int>    _state;
+    size_t              _score;
     size_t              _g;
     size_t              getHeuristicSum();
 
@@ -40,7 +37,7 @@ public:
     inline Node                 *getParent() const { return this->_parent; }
 
     Coord const     getEmptyCoord();
-    size_t          processScore();
+    void            processScore();
     size_t          getHash() const;
     
     const Node&         operator=(Node const & rhs);

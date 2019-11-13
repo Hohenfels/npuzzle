@@ -1,6 +1,6 @@
 #include "../inc/Node.h"
 
-Node::Node(unsigned int (*hFunc)(const Coord &, const Coord &), std::vector<int> state, size_t size) : _size(size), _heuristic(hFunc), _parent(nullptr), _state(state), isSolved(false), _score(0), _g(1)
+Node::Node(unsigned int (*hFunc)(const Coord &, const Coord &), std::vector<int> state, size_t size) : _size(size), _heuristic(hFunc), _parent(nullptr), _state(state), _score(0), _g(1), isSolved(false)
 {
 }
 
@@ -83,7 +83,7 @@ size_t          Node::getHash() const
     return std::hash<std::string>()(s);
 }
 
-size_t  Node::processScore()
+void    Node::processScore()
 {
     size_t  heuristicSum = this->getHeuristicSum();
     this->_score = this->_g + heuristicSum;
@@ -96,7 +96,7 @@ std::ostream&       operator<<(std::ostream& o, Node& n)
     size_t              size = n.getSize();
     
     o << "Score:" << n.getScore() << "\n";
-    for (int i = 0; i < puzzle.size(); i++)
+    for (size_t i = 0; i < puzzle.size(); i++)
         o << puzzle[i] << (!((i + 1) % size) ? "\n" : " ");
     
     return o;
