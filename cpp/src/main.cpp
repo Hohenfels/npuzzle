@@ -24,18 +24,20 @@ void    checkForUndefined(int ac, char **av)
 {
     for (int i = 1; i < ac; i++)
         if (strcmp(av[i], "-f") && strcmp(av[i], "-h") && strcmp(av[i], "-g")
-            && strcmp(av[i - 1], "-h") && strcmp(av[i - 1], "-f"))
+            && strcmp(av[i - 1], "-h") && strcmp(av[i - 1], "-f") && strcmp(av[i], "--greedy") &&
+            strcmp(av[i], "-u") && strcmp(av[i], "--uniform-cost")) 
             OptError("Undefined option (" + std::string(av[i]) + ")");
 }
 
-CLOpt   parseCommmandLine(int ac, char **av)
+CLOpt   parseCommandLine(int ac, char **av)
 {
     CLOpt   opt;
     int     heuristic = 0;
 
-    checkForUndefined(ac, av);
     if (CLOptionExists(av, av + ac, "--help") || ac == 1)
-        OptError("Usage: ./npuzzle -f {FILE} -h {1,2,3} [-g]\nHeuristics:\n1: Manhattan distance\n2: Linear Conflicts\n3: ");
+        OptError("Usage: ./npuzzle -f {FILE} -h {1,2,3} [-g]\n\n-f: Input file\n\n-h: Heuristic index:\n1: Manhattan distance\n2: "
+                "Linear Conflicts\n3: \n\n-g, --greedy: Enables greedy search\n\n-u, --uniform-cost: Enables uniform-cost search\n");
+    checkForUndefined(ac, av);
     if (CLOptionExists(av, av + ac, "-f") && getCLOption(av, av + ac, "-f"))
         opt.filename = getCLOption(av, av + ac, "-f");
     else
@@ -50,20 +52,25 @@ CLOpt   parseCommmandLine(int ac, char **av)
     }
     else
         OptError("No heuristic index.");
-    if (CLOptionExists(av, av + ac, "-g"))
+    if (CLOptionExists(av, av + ac, "-g") || CLOptionExists(av, av + ac, "--greedy"))
         opt.greedy = true;
+    if (CLOptionExists(av, av + ac, "-u") || CLOptionExists(av, av + ac, "--uniform-cost"))
+        opt.uniform = true;
+
+    if (opt.greedy && opt.uniform)
+        OptError("Cannot perform greedy and uniform-cost searches at the same time");
     return opt;
 }
 
 int     main(int argc, char** argv)
 {
     std::pair<std::vector<int>, size_t> puzzle;
-    CLOpt                               opt = parseCommmandLine(argc, argv);
+    CLOpt                               opt = parseCommandLine(argc, argv);
 
     puzzle = Parser::parseFile(opt.filename);
 
     if (checkSolvability(puzzle.first, puzzle.second))
-        solvePuzzle(opt.heuristicIdx, puzzle.second, puzzle.first, opt.greedy);
+        solvePuzzle(opt.heuristicIdx, puzzle.second, puzzle.first, opt.greedy, opt.uniform);
     else
         return 1;
     return 0;

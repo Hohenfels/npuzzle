@@ -77,10 +77,10 @@ size_t          Node::getHash() const
     return std::hash<std::string>()(s);
 }
 
-void    Node::processScore(bool greedy)
+void    Node::processScore(bool greedy, bool uniform)
 {
     float   heuristicSum = this->getHeuristic();
-    this->_score = (greedy ? 0 : static_cast<float>(this->_g)) + heuristicSum;
+    this->_score = (greedy ? 0 : static_cast<float>(this->_g)) + (uniform ? 0 : heuristicSum);
     this->isSolved = (heuristicSum ? false : true);
 }
 

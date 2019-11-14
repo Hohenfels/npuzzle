@@ -10,7 +10,7 @@ struct PQCMP
     }
 };
 
-void    solvePuzzle(int hFuncIdx, size_t size, std::vector<int> grid, bool greedy)
+void    solvePuzzle(int hFuncIdx, size_t size, std::vector<int> grid, bool greedy, bool uniform)
 {
     float (*heuristics[2])(std::vector<int> state, size_t size) = {Heuristics::Manhattan, Heuristics::LinearConflict};
     std::priority_queue<Node*, std::vector<Node*>, PQCMP> queue;
@@ -20,7 +20,7 @@ void    solvePuzzle(int hFuncIdx, size_t size, std::vector<int> grid, bool greed
     size_t      timeComplexity = 0;
     size_t      spaceComplexity = 0;
     
-    node->processScore(greedy);
+    node->processScore(greedy, uniform);
 
     seen.insert(std::pair<size_t, Node*>(node->getHash(), node));
     queue.push(node);
@@ -32,7 +32,7 @@ void    solvePuzzle(int hFuncIdx, size_t size, std::vector<int> grid, bool greed
 
         for (Node *n : createChildren(node, seen))
         {
-            n->processScore(greedy);
+            n->processScore(greedy, uniform);
             queue.push(n);
             seen.insert(std::pair<size_t, Node*>(n->getHash(), n));
             spaceComplexity++;
