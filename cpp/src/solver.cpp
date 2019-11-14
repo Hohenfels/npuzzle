@@ -40,8 +40,7 @@ void    solvePuzzle(int hFuncIdx, size_t size, std::vector<int> grid, bool greed
         timeComplexity++;
     }
 
-    std::cout << "solver ran in " << std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now() - begin).count() << "µs\n";
-
+    printTime(std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now() - begin).count());
     printPath(node, timeComplexity, spaceComplexity);
     deleteNodes(seen);
 }
@@ -102,4 +101,15 @@ void    deleteNodes(std::map<size_t, Node*>& seen)
 {
     for (auto &n : seen)
         delete n.second;
+}
+
+void                    printTime(std::chrono::microseconds::rep diff)
+{
+    std::cout << "Solver ran in ";
+    if (diff > 999999)
+        std::cout << std::setprecision(3) << static_cast<double>(diff) / 1000000.f << "s\n";
+    else if (diff > 999)
+        std::cout << std::setprecision(3) << static_cast<double>(diff) / 1000.f << "ms\n";
+    else
+        std::cout << diff << "μs\n";
 }
