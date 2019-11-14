@@ -101,6 +101,6 @@ bool checkSolvability(std::vector<int> puzzle, int size) {
             return true;
         }
     }
-    std::cout << "not solvable, exit\n";
+    std::cerr << "Puzzle not solvable...\n";
     return false;
 }

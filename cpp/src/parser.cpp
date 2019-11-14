@@ -11,7 +11,7 @@ std::pair<std::vector<int>, size_t> Parser::parseFile(const char* file)
     unsigned int                lineIdx = 0;
     int                         nb;
 
-    if (!input.is_open())
+    if (!input.good())
         parseError(file, 0, "could not open file");
     try { size = getSize(input, lineIdx); }
     catch(const std::exception& e) { parseError(file, lineIdx, e.what()); }
@@ -51,6 +51,14 @@ std::vector<std::string>    Parser::splitLine(const std::string& line, char deli
     return tokens;
 }
 
+bool                        printable(std::string line)
+{
+    for (auto &c : line)
+        if (!std::isprint(c))
+            return false;
+    return true;
+}
+
 size_t                      Parser::getSize(std::ifstream& fileStream, unsigned int& lineIdx)
 {
     std::string                 line;
@@ -60,7 +68,7 @@ size_t                      Parser::getSize(std::ifstream& fileStream, unsigned 
     while (getline(fileStream, line))
     {
         lineIdx++;
-        if (line.empty())
+        if (line.empty() || !printable(line))
             continue;
         if ((tokens = splitLine(line, '#')).size() > 1 || line[0] != '#')
         {
@@ -71,8 +79,8 @@ size_t                      Parser::getSize(std::ifstream& fileStream, unsigned 
         }
     }
 
-    if (ret <= 0L || ret == static_cast<size_t>(LONG_MAX))
-        throw Parser::ParserException("Invalid size (" + tokens[0] + ")");
+    if (ret <= 0 || ret == static_cast<size_t>(LONG_MAX))
+        throw Parser::ParserException("Invalid size " + (tokens.size() > 0 ? "(" + tokens[0] + ")" : ""));
 
     return ret;
 }
@@ -112,6 +120,5 @@ void    Parser::checkPuzzleIntegrity(const std::vector<bool>& integrity)
 void    Parser::parseError(const char *filename, unsigned int lineIdx, const char *err)
 {
     std::cerr << filename << ": " << (lineIdx != 0 ? std::string("line " + std::to_string(lineIdx) + ": ") : "") << err << "\n";
-    std::cerr << "Exiting...\n";
     exit(1);
 }
