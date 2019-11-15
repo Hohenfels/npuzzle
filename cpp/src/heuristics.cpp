@@ -1,6 +1,7 @@
 #include "heuristics.h"
 #include "Node.h"
 
+
 float   Heuristics::Manhattan(std::vector<int> state, size_t size)
 {
     size_t  sum = 0;
@@ -53,4 +54,23 @@ float   Heuristics::LinearConflict(std::vector<int> state, size_t size)
     }
 
     return 2 * conflicts + Manhattan(state, size);
+}
+
+
+float   Heuristics::Gaschnig(std::vector<int> state, size_t size)
+{
+    Coord egc = {static_cast<int>(size / 2 - !(size % 2)), static_cast<int>(size / 2)};
+    size_t count = 0;
+    
+    for (size_t i = 0; i < state.size(); i++)
+    {
+        if (state[i] == 0 && Coord({static_cast<int>(i % size), static_cast<int>(i / size)}) == egc)
+        {
+            
+        }
+        else
+        count++;
+    }
+    std::cout << count << std::endl;
+    return 0;
 }
