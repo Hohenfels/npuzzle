@@ -38,9 +38,9 @@ public:
     inline size_t               getG() const { return this->_g; }
     inline Node                 *getParent() const { return this->_parent; }
 
-    Coord const     getEmptyCoord();
-    void            processScore(bool greedy, bool uniform);
-    size_t          getHash() const;
+    Coord const                 getEmptyCoord();
+    void                        processScore(bool greedy, bool uniform);
+    size_t                      getHash() const;
     
     const Node&         operator=(Node const & rhs);
 

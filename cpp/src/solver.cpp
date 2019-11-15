@@ -12,7 +12,7 @@ struct PQCMP
 
 void    solvePuzzle(int hFuncIdx, size_t size, std::vector<int> grid, bool greedy, bool uniform)
 {
-    float (*heuristics[3])(std::vector<int> state, size_t size) = {Heuristics::Manhattan, Heuristics::LinearConflict, Heuristics::Gaschnig};
+    float (*heuristics[4])(std::vector<int> state, size_t size) = {Heuristics::Manhattan, Heuristics::LinearConflict, Heuristics::Gaschnig, Heuristics::Yolo};
     std::priority_queue<Node*, std::vector<Node*>, PQCMP> queue;
     std::map<size_t, Node*>     seen;
     auto        begin = std::chrono::steady_clock::now();

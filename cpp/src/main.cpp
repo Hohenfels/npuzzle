@@ -36,7 +36,7 @@ CLOpt   parseCommandLine(int ac, char **av)
 
     if (CLOptionExists(av, av + ac, "--help") || ac == 1)
         OptError("Usage: ./npuzzle -f {FILE} -h {1,2,3} [-g]\n\n-f: Input file\n\n-h: Heuristic index:\n1: Manhattan distance\n2: "
-                "Linear Conflicts\n3: \n\n-g, --greedy: Enables greedy search\n\n-u, --uniform-cost: Enables uniform-cost search\n");
+                "Linear Conflicts\n3: Gaschnig\n\n-g, --greedy: Enables greedy search\n\n-u, --uniform-cost: Enables uniform-cost search\n");
     checkForUndefined(ac, av);
     if (CLOptionExists(av, av + ac, "-f") && getCLOption(av, av + ac, "-f"))
         opt.filename = getCLOption(av, av + ac, "-f");
@@ -45,7 +45,7 @@ CLOpt   parseCommandLine(int ac, char **av)
     if (CLOptionExists(av, av + ac, "-h") && getCLOption(av, av + ac, "-h"))
     {
         heuristic = std::strtol(getCLOption(av, av + ac, "-h"), nullptr, 10);
-        if (heuristic > 3 || heuristic < 1)
+        if (heuristic > 4 || heuristic < 1)
             OptError("Undefined heuristic.");
         else
             opt.heuristicIdx = heuristic - 1;
