@@ -9,13 +9,15 @@
 #include <unistd.h>
 #include <chrono>
 #include <iomanip>
+#include <deque>
 #include "Node.h"
 #include "heuristics.h"
 
 class Node;
 
-void                    solvePuzzle(int hFuncIdx, size_t size, std::vector<int> grid, bool greedy, bool uniform);
-std::vector<Node*>      createChildren(Node *parent, std::map<size_t, Node*>& seen);
+void                    AStar(int hFuncIdx, size_t size, std::vector<int> grid, bool greedy, bool uniform);
+void                    IDAStar(int hFuncIdx, size_t size, std::vector<int> grid);
+std::vector<Node*>      createChildren(Node *parent, std::map<size_t, Node*> *seen);
 void                    printPath(Node *node, size_t timeComplexity, size_t spaceComplexity);
 void                    printTime(std::chrono::microseconds::rep diff);
 void                    deleteNodes(std::map<size_t, Node*>& seen);

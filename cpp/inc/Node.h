@@ -21,7 +21,6 @@ private:
     std::vector<int>    _state;
     float               _score;
     size_t              _g;
-    size_t              getHeuristic();
 
 public:
     Node(float (*hFunc)(std::vector<int> state, size_t size), std::vector<int> state, size_t size);
@@ -38,6 +37,7 @@ public:
     inline size_t               getG() const { return this->_g; }
     inline Node                 *getParent() const { return this->_parent; }
 
+    size_t                      getHeuristic();
     Coord const                 getEmptyCoord();
     void                        processScore(bool greedy, bool uniform);
     size_t                      getHash() const;
