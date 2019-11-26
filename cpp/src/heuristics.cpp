@@ -29,7 +29,6 @@ float   Heuristics::LinearConflict(std::vector<int> state, size_t size)
                 if (row[i] && row[j]) {
                     Coord ti = Node::getSnailCoords(row[i], size);
                     Coord tj = Node::getSnailCoords(row[j], size);
-
                     if (ti.y == y && tj.y == y && tj.x < ti.x)
                         conflicts++;
                 }

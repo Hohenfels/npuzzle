@@ -70,7 +70,8 @@ int     main(int argc, char** argv)
     puzzle = Parser::parseFile(opt.filename);
 
     if (checkSolvability(puzzle.first, puzzle.second))
-        AStar(opt.heuristicIdx, puzzle.second, puzzle.first, opt.greedy, opt.uniform);
+        // AStar(opt.heuristicIdx, puzzle.second, puzzle.first, opt.greedy, opt.uniform);
+        IDAStar(opt.heuristicIdx, puzzle.second, puzzle.first);
     else
         return 1;
     return 0;
