@@ -73,12 +73,14 @@ int     main(int argc, char** argv)
     std::pair<std::vector<int>, size_t> puzzle;
     CLOpt                               opt;
     
-    opt = parseCommandLine(argc, argv);
-    puzzle = Parser::parseFile(opt.filename);
+    (void)argc;
+    (void)argv;
+    // opt = parseCommandLine(argc, argv);
+    puzzle = Parser::parseFile("../tests/valid/test3");
 
     if (checkSolvability(puzzle.first, puzzle.second))
-        if (opt.ida)
-            IDAStar(opt.heuristicIdx, puzzle.second, puzzle.first, opt.demo);
+        if (true)
+            IDAStar(1, puzzle.second, puzzle.first);
         else
             AStar(opt.heuristicIdx, puzzle.second, puzzle.first, opt.greedy, opt.uniform, opt.demo);
     else

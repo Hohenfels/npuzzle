@@ -1,6 +1,5 @@
 #include "solver.h"
 
-
 struct PQCMP
 {
     bool operator()(const ::Node* lhs, const ::Node* rhs)
@@ -57,7 +56,7 @@ std::pair<bool, long long>   IDASearch(std::deque<std::pair<size_t, void*>>& pat
         return std::make_pair<bool, long>(false, score);
     else if (node->getHeuristic() == 0)
         return std::make_pair<bool, long>(true, score);
-    for (auto& child : createChildren(node, nullptr))
+    for (Node *child : createChildren(node, nullptr))
     {
         if (std::find_if(path.begin(), path.end(), [&child](const std::pair<size_t, void*>& check) { return child->getHash() == check.first; }) == path.end())
         {
@@ -71,6 +70,8 @@ std::pair<bool, long long>   IDASearch(std::deque<std::pair<size_t, void*>>& pat
             path.pop_front();
             space++;
         }
+        else
+            delete child;
     }
     time++;
 
@@ -173,7 +174,7 @@ void    printPath(Node *node, size_t timeComplexity, size_t spaceComplexity, std
             ++length;
         }
     }
-    
+
     output.open("path.txt");
     if (output.good())
         for (Node *n : path)
