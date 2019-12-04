@@ -41,11 +41,11 @@ void    AStar(int hFuncIdx, size_t size, std::vector<int> grid, bool greedy, boo
     }
 
     printTime(std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now() - begin).count());
-    printPath(node, timeComplexity, spaceComplexity);
+    printPath(node, timeComplexity, spaceComplexity, std::deque<std::pair<size_t, void*>>());
     deleteNodes(seen);
 }
 
-std::pair<bool, long long>   IDASearch(std::deque<std::pair<size_t, void*>>& path, int cost, long threshold)
+std::pair<bool, long long>   IDASearch(std::deque<std::pair<size_t, void*>>& path, int cost, long threshold, size_t& time, size_t& space)
 {
     Node    *node = static_cast<Node*>(path[0].second);
     int     score = cost + node->getHeuristic();
@@ -61,15 +61,17 @@ std::pair<bool, long long>   IDASearch(std::deque<std::pair<size_t, void*>>& pat
         if (std::find_if(path.begin(), path.end(), [&child](const std::pair<size_t, void*>& check) { return child->getHash() == check.first; }) == path.end())
         {
             path.push_front(std::make_pair<size_t, void*>(child->getHash(), child));
-            searchRet = IDASearch(path, cost + 1, threshold);
+            searchRet = IDASearch(path, cost + 1, threshold, time, space);
             if (searchRet.first)
                 return searchRet;
             else if (searchRet.second < ret)
                 ret = searchRet.second;
             delete static_cast<Node*>(path[0].second);
             path.pop_front();
+            space++;
         }
     }
+    time++;
 
     return std::make_pair<bool, long long>(false, ret);
 }
@@ -78,8 +80,11 @@ void                    IDAStar(int hFuncIdx, size_t size, std::vector<int> grid
 {
     float (*heuristics[4])(std::vector<int> state, size_t size) = {Heuristics::Manhattan, Heuristics::LinearConflict, Heuristics::Gaschnig, Heuristics::Yolo};
     std::deque<std::pair<size_t, void*>>  path;
+    size_t                              timeComplexity = 0;
+    size_t                              spaceComplexity = 0;
     std::pair<bool, long long>          ret;
     long                                threshold;
+    auto                                begin = std::chrono::steady_clock::now();
     Node                                *node = new Node(heuristics[hFuncIdx], grid, size);
 
     threshold = node->getHeuristic();
@@ -87,28 +92,16 @@ void                    IDAStar(int hFuncIdx, size_t size, std::vector<int> grid
 
     while (!path.empty())
     {
-        ret = IDASearch(path, 0, threshold);
-        if (ret.first)
-        {
-            std::cout << "SOLVED EZ" << ret.second << "\n";
+        ret = IDASearch(path, 0, threshold, timeComplexity, spaceComplexity);
+        if (ret.first || ret.second == __LONG_MAX__)
             break; //solved
-        }
-        else if (ret.second == __LONG_MAX__)
-        {
-            std::cout << "IMPOSSIBLE\n";
-            break; //impossible
-        }
         else
             threshold = ret.second;
+        timeComplexity++;
     }
 
-    std::ofstream    output;
-    output.open("path.txt");
-    if (output.good())
-        for (auto& n : path)
-            output << *(static_cast<Node*>(n.second)) << "\n";
-
-    output.close();
+    printTime(std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now() - begin).count());
+    printPath(nullptr, timeComplexity, spaceComplexity, path);
 
 }
 
@@ -140,28 +133,40 @@ std::vector<Node *>   createChildren(Node *parent, std::map<size_t, Node*> *seen
     return children;
 }
 
-void    printPath(Node *node, size_t timeComplexity, size_t spaceComplexity)
+void    printPath(Node *node, size_t timeComplexity, size_t spaceComplexity, std::deque<std::pair<size_t, void*>> ida_path)
 {
     std::vector<Node*>  path;
-    size_t              it = 0;
+    size_t              length = 0;
     std::ofstream       output;
 
-    while (node->getParent())
+    if (node)
     {
+        while (node->getParent())
+        {
+            path.push_back(node);
+            node = node->getParent();
+            ++length;
+        }
         path.push_back(node);
-        node = node->getParent();
-        ++it;
-    }
-    path.push_back(node);
 
-    std::reverse(path.begin(), path.end());
+        std::reverse(path.begin(), path.end());
+    }
+    else
+    {
+        for (auto it = ida_path.rbegin(); it != ida_path.rend(); ++it)
+        {
+            path.push_back(static_cast<Node*>(it->second));
+            ++length;
+        }
+    }
+    
     output.open("path.txt");
     if (output.good())
         for (Node *n : path)
             output << *n << "\n";
-
     output.close();
-    std::cout << "Path length: " << it << "\nTime complexity: " << timeComplexity << "\nSpace complexity: " << spaceComplexity << "\nPath written to path.txt\n";
+
+    std::cout << "Path length: " << --length << "\nTime complexity: " << timeComplexity << "\nSpace complexity: " << spaceComplexity << "\nPath written to path.txt\n";
 }
 
 void    deleteNodes(std::map<size_t, Node*>& seen)

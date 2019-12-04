@@ -69,8 +69,9 @@ CLOpt   parseCommandLine(int ac, char **av)
 int     main(int argc, char** argv)
 {
     std::pair<std::vector<int>, size_t> puzzle;
-    CLOpt                               opt = parseCommandLine(argc, argv);
-
+    CLOpt                               opt;
+    
+    opt = parseCommandLine(argc, argv);
     puzzle = Parser::parseFile(opt.filename);
 
     if (checkSolvability(puzzle.first, puzzle.second))
