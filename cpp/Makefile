@@ -19,8 +19,6 @@ SRC_AVM		=	parser.cpp \
 				solver.cpp \
 				main.cpp
 
-#INC_PATH 	= 	$(addprefix $(DIR_INC), $(HEAD_AVM))
-
 OBJ 		= 	$(addprefix $(DIR_OBJ), $(SRC_AVM:.cpp=.o))
 INC 		= 	$(addprefix -I, $(DIR_INC))
 

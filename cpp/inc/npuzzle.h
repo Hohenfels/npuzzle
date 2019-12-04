@@ -14,6 +14,7 @@ struct CLOpt
     int     heuristicIdx;
     bool    greedy = false;
     bool    uniform = false;
+    bool    ida = false;
 };
 
 bool checkSolvability(std::vector<int> puzzle, int size);
