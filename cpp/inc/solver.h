@@ -15,10 +15,10 @@
 
 class Node;
 
-void                    AStar(int hFuncIdx, size_t size, std::vector<int> grid, bool greedy, bool uniform);
-void                    IDAStar(int hFuncIdx, size_t size, std::vector<int> grid);
+void                    AStar(int hFuncIdx, size_t size, std::vector<int> grid, bool greedy, bool uniform, bool demo);
+void                    IDAStar(int hFuncIdx, size_t size, std::vector<int> grid, bool demo);
 std::vector<Node*>      createChildren(Node *parent, std::map<size_t, Node*> *seen);
-void                    printPath(Node *node, size_t timeComplexity, size_t spaceComplexity, std::deque<std::pair<size_t, void*>> ida_path);
+void                    printPath(Node *node, size_t timeComplexity, size_t spaceComplexity, std::deque<std::pair<size_t, void*>> ida_path, bool demo);
 void                    printTime(std::chrono::microseconds::rep diff);
 void                    deleteNodes(std::map<size_t, Node*>& seen);
 

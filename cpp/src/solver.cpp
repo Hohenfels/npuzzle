@@ -1,5 +1,6 @@
 #include "solver.h"
 
+
 struct PQCMP
 {
     bool operator()(const ::Node* lhs, const ::Node* rhs)
@@ -10,7 +11,7 @@ struct PQCMP
     }
 };
 
-void    AStar(int hFuncIdx, size_t size, std::vector<int> grid, bool greedy, bool uniform)
+void    AStar(int hFuncIdx, size_t size, std::vector<int> grid, bool greedy, bool uniform, bool demo)
 {
     float (*heuristics[4])(std::vector<int> state, size_t size) = {Heuristics::Manhattan, Heuristics::LinearConflict, Heuristics::Gaschnig, Heuristics::Yolo};
     std::priority_queue<Node*, std::vector<Node*>, PQCMP> queue;
@@ -41,7 +42,7 @@ void    AStar(int hFuncIdx, size_t size, std::vector<int> grid, bool greedy, boo
     }
 
     printTime(std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now() - begin).count());
-    printPath(node, timeComplexity, spaceComplexity, std::deque<std::pair<size_t, void*>>());
+    printPath(node, timeComplexity, spaceComplexity, std::deque<std::pair<size_t, void*>>(), demo);
     deleteNodes(seen);
 }
 
@@ -76,7 +77,7 @@ std::pair<bool, long long>   IDASearch(std::deque<std::pair<size_t, void*>>& pat
     return std::make_pair<bool, long long>(false, ret);
 }
 
-void                    IDAStar(int hFuncIdx, size_t size, std::vector<int> grid)
+void                    IDAStar(int hFuncIdx, size_t size, std::vector<int> grid, bool demo)
 {
     float (*heuristics[4])(std::vector<int> state, size_t size) = {Heuristics::Manhattan, Heuristics::LinearConflict, Heuristics::Gaschnig, Heuristics::Yolo};
     std::deque<std::pair<size_t, void*>>  path;
@@ -101,7 +102,7 @@ void                    IDAStar(int hFuncIdx, size_t size, std::vector<int> grid
     }
 
     printTime(std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now() - begin).count());
-    printPath(nullptr, timeComplexity, spaceComplexity, path);
+    printPath(nullptr, timeComplexity, spaceComplexity, path, demo);
 
 }
 
@@ -133,8 +134,17 @@ std::vector<Node *>   createChildren(Node *parent, std::map<size_t, Node*> *seen
     return children;
 }
 
-void    printPath(Node *node, size_t timeComplexity, size_t spaceComplexity, std::deque<std::pair<size_t, void*>> ida_path)
+void    printState(Node *node)
 {
+    std::cout << "\033[2J\033[H";
+    std::cout << *node << "\n";
+    sleep(1);
+    std::cout << "\033[2J\033[H";
+}
+
+void    printPath(Node *node, size_t timeComplexity, size_t spaceComplexity, std::deque<std::pair<size_t, void*>> ida_path, bool demo)
+{
+    demo = false;
     std::vector<Node*>  path;
     size_t              length = 0;
     std::ofstream       output;
@@ -163,7 +173,10 @@ void    printPath(Node *node, size_t timeComplexity, size_t spaceComplexity, std
     output.open("path.txt");
     if (output.good())
         for (Node *n : path)
+        {
+            printState(n);
             output << *n << "\n";
+        }
     output.close();
 
     std::cout << "Path length: " << --length << "\nTime complexity: " << timeComplexity << "\nSpace complexity: " << spaceComplexity << "\nPath written to path.txt\n";

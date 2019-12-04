@@ -25,7 +25,7 @@ void    checkForUndefined(int ac, char **av)
     for (int i = 1; i < ac; i++)
         if (strcmp(av[i], "-f") && strcmp(av[i], "-h") && strcmp(av[i], "-g")
             && strcmp(av[i - 1], "-h") && strcmp(av[i - 1], "-f") && strcmp(av[i], "--greedy") &&
-            strcmp(av[i], "-u") && strcmp(av[i], "--uniform-cost") && strcmp(av[i], "-ida")) 
+            strcmp(av[i], "-u") && strcmp(av[i], "--uniform-cost") && strcmp(av[i], "-ida") && strcmp(av[i], "-d")) 
             OptError("Undefined option (" + std::string(av[i]) + ")");
 }
 
@@ -36,7 +36,7 @@ CLOpt   parseCommandLine(int ac, char **av)
 
     if (CLOptionExists(av, av + ac, "--help") || ac == 1)
         OptError("Usage: ./npuzzle -f {FILE} -h {1,2,3} [-g] [-u] [-ida]\n\n-f: Input file\n\n-h: Heuristic index:\n1: Manhattan distance\n2: "
-                "Linear Conflicts\n3: Gaschnig\n\n-g, --greedy: Enables greedy search\n\n-u, --uniform-cost: Enables uniform-cost search\n");
+                "Linear Conflicts\n3: Gaschnig\n\n-g, --greedy: Enables greedy search\n\n-u, --uniform-cost: Enables uniform-cost search\n\n-d: Demo mode showing step by step the puzzle being solved");
     checkForUndefined(ac, av);
     if (CLOptionExists(av, av + ac, "-f") && getCLOption(av, av + ac, "-f"))
         opt.filename = getCLOption(av, av + ac, "-f");
@@ -58,6 +58,8 @@ CLOpt   parseCommandLine(int ac, char **av)
         opt.uniform = true;
     if (CLOptionExists(av, av + ac, "-ida"))
         opt.ida = true;
+    if (CLOptionExists(av, av + ac, "-d"))
+        opt.demo = true;
 
     if (opt.greedy && opt.uniform)
         OptError("Cannot perform greedy and uniform-cost searches at the same time");
@@ -76,9 +78,9 @@ int     main(int argc, char** argv)
 
     if (checkSolvability(puzzle.first, puzzle.second))
         if (opt.ida)
-            IDAStar(opt.heuristicIdx, puzzle.second, puzzle.first);
+            IDAStar(opt.heuristicIdx, puzzle.second, puzzle.first, opt.demo);
         else
-            AStar(opt.heuristicIdx, puzzle.second, puzzle.first, opt.greedy, opt.uniform);
+            AStar(opt.heuristicIdx, puzzle.second, puzzle.first, opt.greedy, opt.uniform, opt.demo);
     else
         return 1;
     return 0;
