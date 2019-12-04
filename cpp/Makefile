@@ -32,7 +32,7 @@ obj:
 $(NAME): $(OBJ)
 	@$(COMPILER) -o $(NAME) $(OBJ)
 
-$(DIR_OBJ)%.o: $(DIR_SRC)%.cpp #$(INC_PATH)
+$(DIR_OBJ)%.o: $(DIR_SRC)%.cpp
 	@$(COMPILER) $(FLAGS) $(INC) -c -o $@ $<
 
 clean:
