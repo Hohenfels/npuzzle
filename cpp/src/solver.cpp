@@ -104,6 +104,9 @@ void                    IDAStar(int hFuncIdx, size_t size, std::vector<int> grid
     printTime(std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now() - begin).count());
     printPath(nullptr, timeComplexity, spaceComplexity, path, demo);
 
+    for (auto& i : path)
+        delete static_cast<Node*>(i.second);
+
 }
 
 std::vector<Node *>   createChildren(Node *parent, std::map<size_t, Node*> *seen)
@@ -158,6 +161,7 @@ void    printPath(Node *node, size_t timeComplexity, size_t spaceComplexity, std
             ++length;
         }
         path.push_back(node);
+        ++length;
 
         std::reverse(path.begin(), path.end());
     }

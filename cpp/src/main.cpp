@@ -83,5 +83,6 @@ int     main(int argc, char** argv)
             AStar(opt.heuristicIdx, puzzle.second, puzzle.first, opt.greedy, opt.uniform, opt.demo);
     else
         return 1;
+    while (1);
     return 0;
 }
