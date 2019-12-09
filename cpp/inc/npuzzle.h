@@ -16,6 +16,7 @@ struct CLOpt
     bool    uniform = false;
     bool    ida = false;
     bool    demo = false;
+    bool    visu = false;
 };
 
 bool checkSolvability(std::vector<int> puzzle, int size);
