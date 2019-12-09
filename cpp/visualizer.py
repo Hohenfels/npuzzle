@@ -1,7 +1,7 @@
 import pygame
 
 windowSize = 900
-rate = 60
+slidingSpeed = 30
 
 class Tile():
     def __init__(self, posX, posY, val):
@@ -24,8 +24,8 @@ class Tile():
     def move(self):
         if self.x != self.target[0] or self.y != self.target[1]:
             self.isMoving = True
-            self.x = self.x + (self.target[0] - self.x) / rate if abs((self.target[0] - self.x) / rate) > 0.05 else self.target[0]
-            self.y = self.y + (self.target[1] - self.y) / rate if abs((self.target[1] - self.y) / rate) > 0.05 else self.target[1]
+            self.x = self.x + (self.target[0] - self.x) / slidingSpeed if abs((self.target[0] - self.x) / slidingSpeed) > 0.05 else self.target[0]
+            self.y = self.y + (self.target[1] - self.y) / slidingSpeed if abs((self.target[1] - self.y) / slidingSpeed) > 0.05 else self.target[1]
         else:
             self.isMoving = False
 
