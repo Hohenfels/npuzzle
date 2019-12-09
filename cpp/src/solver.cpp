@@ -143,7 +143,6 @@ void    printState(Node *node)
     std::cout << "\033[2J\033[H";
     std::cout << *node << "\n";
     sleep(1);
-    std::cout << "\033[2J\033[H";
 }
 
 void    printPath(Node *node, size_t timeComplexity, size_t spaceComplexity, std::deque<std::pair<size_t, void*>> ida_path, bool demo)
@@ -183,7 +182,6 @@ void    printPath(Node *node, size_t timeComplexity, size_t spaceComplexity, std
             output << *n << "\n";
         }
     output.close();
-
     std::cout << "Path length: " << --length << "\nTime complexity: " << timeComplexity << "\nSpace complexity: " << spaceComplexity << "\nPath written to path.txt\n";
 }
 
