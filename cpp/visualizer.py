@@ -8,6 +8,8 @@ class Tile():
         self.val = int(val)
         self.x = posX
         self.y = posY
+        self.target = (self.x, self.y)
+        self.isMoving = False
 
     def __repr__(self):
         return self.__str__()
@@ -15,8 +17,17 @@ class Tile():
     def __str__(self):
         return f"{self.val} x:{self.x} y:{self.y}"
 
+    def moveTo(self, dir):
+        self.target = (self.x + dir[0], self.y + dir[1])
+        print(self, self.target, dir)
+
     def move(self):
-        pass
+        if self.x != self.target[0] or self.y != self.target[1]:
+            self.isMoving = True
+            self.x = self.x + (self.target[0] - self.x) / rate if abs((self.target[0] - self.x) / rate) > 0.05 else self.target[0]
+            self.y = self.y + (self.target[1] - self.y) / rate if abs((self.target[1] - self.y) / rate) > 0.05 else self.target[1]
+        else:
+            self.isMoving = False
 
 def parse(filename):
     
@@ -66,12 +77,20 @@ def parse(filename):
     return initState, size, moves
 
 def visu(state, moves, puzzleSize):
+
+    def moving(state):
+        for tile in state:
+            if tile.isMoving:
+                return True
+        return False
+
     window = pygame.display.set_mode((windowSize, windowSize))
     pygame.init()
     pygame.display.set_caption('N-Puzzle')
     done = False
     tileSize = windowSize / puzzleSize
     fontSize = 30 + (10 - size) * 10
+    moveIdx = -1
 
     while not done:
         window.fill((0, 0, 0))
@@ -81,10 +100,15 @@ def visu(state, moves, puzzleSize):
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     done = True
+                elif event.key == pygame.K_SPACE:
+                    if not moving(state) and moveIdx < len(moves):
+                        moveIdx += 1
+                        state[moves[moveIdx][0]].moveTo((moves[moveIdx][1][0] * tileSize, moves[moveIdx][1][1] * tileSize))
         for tile in state:
             if tile.val != 0:
+                tile.move()
                 pygame.draw.rect(window, (255, 127, 80), pygame.Rect(tile.x, tile.y, tileSize - 2, tileSize - 2))
-                window.blit(pygame.font.SysFont(None, fontSize, 1).render(str(tile.val), False, (255, 255, 255)), (tile.x + tileSize / 2 - len(str(tile.val)) / 2 * fontSize, tile.y + tileSize / 2 - len(str(tile.val)) / 2 * fontSize))
+                window.blit(pygame.font.SysFont(None, fontSize, 1).render(str(tile.val), False, (255, 255, 255)), (tile.x + tileSize / 2 - len(str(tile.val)) * fontSize / 2, tile.y + tileSize / 2 - len(str(tile.val)) * fontSize / 2))
         pygame.display.update()
 
     pygame.quit()
