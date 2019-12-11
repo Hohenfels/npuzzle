@@ -1,6 +1,7 @@
 import pygame
 
 windowSize = 900
+red = (255, 0, 0)
 
 class Tile():
     def __init__(self, posX, posY, val):
@@ -91,7 +92,10 @@ def visu(state, moves, puzzleSize):
     moveIdx = -1
     slidingSpeed = 30
 
+    fontSideMenu = pygame.font.SysFont(None, 44)
+
     while not done:
+        textSideMenu = fontSideMenu.render(f"Step: {moveIdx + 1} / {len(moves)}", True, red)
         window.fill((0, 0, 0))
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -122,6 +126,7 @@ def visu(state, moves, puzzleSize):
                     False,(255, 255, 255)),
                     (tile.x + tileSize / 2 - len(str(tile.val)) * fontSize / 2,
                     tile.y + tileSize / 2 - len(str(tile.val)) * fontSize / 2))
+            window.blit(textSideMenu, (windowSize + 10, 5))
         pygame.display.update()
     pygame.quit()
 
