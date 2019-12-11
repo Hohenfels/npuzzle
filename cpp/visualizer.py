@@ -2,6 +2,8 @@ import pygame
 
 windowSize = 900
 red = (255, 0, 0)
+orange = (255, 127, 80)
+white = (255, 255, 255)
 
 class Tile():
     def __init__(self, posX, posY, val):
@@ -131,10 +133,10 @@ def visu(state, moves, puzzleSize):
         for tile in state:
             if tile.val != 0:
                 tile.move(slidingSpeed)
-                pygame.draw.rect(window, (255, 127, 80), pygame.Rect(tile.x, tile.y, tileSize - 2, tileSize - 2))
+                pygame.draw.rect(window, orange, pygame.Rect(tile.x, tile.y, tileSize - 2, tileSize - 2))
                 window.blit(pygame.font.SysFont(None, 
                                 fontSize, 1).render(str(tile.val),
-                                False,(255, 255, 255)),
+                                False, white),
                                 (tile.x + tileSize / 2 - len(str(tile.val)) * fontSize / 2,
                                 tile.y + tileSize / 2 - len(str(tile.val)) * fontSize / 2)
                             )
