@@ -25,8 +25,7 @@ void    checkForUndefined(int ac, char **av)
     for (int i = 1; i < ac; i++)
         if (strcmp(av[i], "-f") && strcmp(av[i], "-h") && strcmp(av[i], "-g")
             && strcmp(av[i - 1], "-h") && strcmp(av[i - 1], "-f") && strcmp(av[i], "--greedy") &&
-            strcmp(av[i], "-u") && strcmp(av[i], "--uniform-cost") && strcmp(av[i], "-ida") && 
-            strcmp(av[i], "-d") && strcmp(av[i], "-v")) 
+            strcmp(av[i], "-u") && strcmp(av[i], "--uniform-cost") && strcmp(av[i], "-ida") && strcmp(av[i], "-v")) 
             OptError("Undefined option (" + std::string(av[i]) + ")");
 }
 
@@ -39,7 +38,6 @@ CLOpt   parseCommandLine(int ac, char **av)
         OptError("Usage: ./npuzzle -f {FILE} -h {1,2,3} [-g] [-u] [-ida]\n\n-f: Input file\n\n-h: Heuristic index:\n1: Manhattan distance\n2: Linear Conflicts\n3: Gaschnig\n\n"
                     "-g, --greedy: Enables greedy search\n\n"
                     "-u, --uniform-cost: Enables uniform-cost search\n\n"
-                    "-d: Demo mode showing step by step the puzzle being solved\n\n"
                     "-v: Enable python visualizer");
     checkForUndefined(ac, av);
     if (CLOptionExists(av, av + ac, "-f") && getCLOption(av, av + ac, "-f"))
@@ -62,8 +60,6 @@ CLOpt   parseCommandLine(int ac, char **av)
         opt.uniform = true;
     if (CLOptionExists(av, av + ac, "-ida"))
         opt.ida = true;
-    if (CLOptionExists(av, av + ac, "-d"))
-        opt.demo = true;
     if (CLOptionExists(av, av + ac, "-v"))
         opt.visu = true;
     if (opt.greedy && opt.uniform)
@@ -83,11 +79,14 @@ int     main(int argc, char** argv)
 
     if (checkSolvability(puzzle.first, puzzle.second))
         if (opt.ida)
-            IDAStar(opt.heuristicIdx, puzzle.second, puzzle.first, opt.demo);
+            IDAStar(opt.heuristicIdx, puzzle.second, puzzle.first);
         else
-            AStar(opt.heuristicIdx, puzzle.second, puzzle.first, opt.greedy, opt.uniform, opt.demo);
+            AStar(opt.heuristicIdx, puzzle.second, puzzle.first, opt.greedy, opt.uniform);
     else
         return 1;
-    // while (1);
+
+    if (opt.visu)
+        if (system("python3 visualizer.py 2> /dev/null"))
+            std::cerr << "Couldn't launch visualizer...\n";
     return 0;
 }

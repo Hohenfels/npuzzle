@@ -15,7 +15,6 @@ struct CLOpt
     bool    greedy = false;
     bool    uniform = false;
     bool    ida = false;
-    bool    demo = false;
     bool    visu = false;
 };
 
