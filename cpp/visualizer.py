@@ -83,20 +83,25 @@ def visu(state, moves, puzzleSize):
                 return True
         return False
 
-    window = pygame.display.set_mode((windowSize + 250, windowSize))
+    moveIdx = -1
+    window = pygame.display.set_mode((windowSize, windowSize))
     pygame.init()
-    pygame.display.set_caption('N-Puzzle')
+    pygame.display.set_caption(f'N-Puzzle | Step: {moveIdx + 1} / {len(moves)} | Press F1 for help')
     done = False
     tileSize = windowSize / puzzleSize
     fontSize = 30 + (10 - size) * 10
-    moveIdx = -1
     slidingSpeed = 30
+    showKeyMenu = False
+    autoMode = False
 
-    fontSideMenu = pygame.font.SysFont(None, 44)
+    keyboardImage = pygame.image.load("./keyboardImage.png")
 
     while not done:
-        textSideMenu = fontSideMenu.render(f"Step: {moveIdx + 1} / {len(moves)}", True, red)
+        pygame.display.set_caption(f'N-Puzzle | Step: {moveIdx + 1} / {len(moves)} | Press F1 for help')
         window.fill((0, 0, 0))
+        if autoMode and not moving(state) and moveIdx < len(moves) - 1:
+            moveIdx += 1
+            state[moves[moveIdx][0]].moveTo((moves[moveIdx][1][0] * tileSize, moves[moveIdx][1][1] * tileSize))
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 done = True
@@ -104,7 +109,7 @@ def visu(state, moves, puzzleSize):
                 if event.key == pygame.K_ESCAPE:
                     done = True
                 elif event.key == pygame.K_RIGHT:
-                    if not moving(state) and moveIdx < len(moves):
+                    if not moving(state) and moveIdx < len(moves) - 1:
                         moveIdx += 1
                         state[moves[moveIdx][0]].moveTo((moves[moveIdx][1][0] * tileSize, moves[moveIdx][1][1] * tileSize))
                 elif event.key == pygame.K_LEFT:
@@ -117,6 +122,10 @@ def visu(state, moves, puzzleSize):
                 elif event.key == pygame.K_PAGEDOWN:
                     print(f"Slowing down sliding speed: {slidingSpeed}")
                     slidingSpeed += 5
+                elif event.key == pygame.K_F1:
+                    showKeyMenu = False if showKeyMenu else True
+                elif event.key == pygame.K_SPACE:
+                    autoMode = False if autoMode else True
         for tile in state:
             if tile.val != 0:
                 tile.move(slidingSpeed)
@@ -126,16 +135,11 @@ def visu(state, moves, puzzleSize):
                     False,(255, 255, 255)),
                     (tile.x + tileSize / 2 - len(str(tile.val)) * fontSize / 2,
                     tile.y + tileSize / 2 - len(str(tile.val)) * fontSize / 2))
-            window.blit(textSideMenu, (windowSize + 10, 5))
+        if showKeyMenu:
+            window.blit(keyboardImage, (windowSize / 2 - keyboardImage.get_rect().width / 2, windowSize / 2 - keyboardImage.get_rect().height / 2))
         pygame.display.update()
     pygame.quit()
 
 if __name__ == "__main__":
     initState, size, moves = parse('path.txt')
     visu(initState, moves, size)
-
-"""
-TODO: Side menu avec path length et legende des controles du visu
-TODO: Plutot qu'espace faire left-right pour next-prev
-
-"""
