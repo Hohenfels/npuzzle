@@ -137,9 +137,9 @@ def visu(state, moves, puzzleSize):
                 window.blit(pygame.font.SysFont(None, 
                                 fontSize, 1).render(str(tile.val),
                                 False, white),
-                                (tile.x + tileSize / 2 - len(str(tile.val)) * fontSize / 2,
-                                tile.y + tileSize / 2 - len(str(tile.val)) * fontSize / 2)
-                            )
+                                (tile.x + tileSize / 2 - fontSize / 2,
+                                tile.y + tileSize / 2 - fontSize / 2,
+                            ))
         if showKeyMenu:
             window.blit(keyboardImage, (windowSize / 2 - keyboardImage.get_rect().width / 2,
                                         windowSize / 2 - keyboardImage.get_rect().height / 2)
