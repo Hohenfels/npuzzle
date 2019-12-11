@@ -124,6 +124,7 @@ def visu(state, moves, puzzleSize):
                     slidingSpeed += 5
                 elif event.key == pygame.K_F1:
                     showKeyMenu = False if showKeyMenu else True
+                    print("Showing menu" if showKeyMenu else "Hiding menu")
                 elif event.key == pygame.K_SPACE:
                     autoMode = False if autoMode else True
                     print("AutoMode activated" if autoMode else "AutoMode desactivated")
@@ -132,12 +133,15 @@ def visu(state, moves, puzzleSize):
                 tile.move(slidingSpeed)
                 pygame.draw.rect(window, (255, 127, 80), pygame.Rect(tile.x, tile.y, tileSize - 2, tileSize - 2))
                 window.blit(pygame.font.SysFont(None, 
-                    fontSize, 1).render(str(tile.val),
-                    False,(255, 255, 255)),
-                    (tile.x + tileSize / 2 - len(str(tile.val)) * fontSize / 2,
-                    tile.y + tileSize / 2 - len(str(tile.val)) * fontSize / 2))
+                                fontSize, 1).render(str(tile.val),
+                                False,(255, 255, 255)),
+                                (tile.x + tileSize / 2 - len(str(tile.val)) * fontSize / 2,
+                                tile.y + tileSize / 2 - len(str(tile.val)) * fontSize / 2)
+                            )
         if showKeyMenu:
-            window.blit(keyboardImage, (windowSize / 2 - keyboardImage.get_rect().width / 2, windowSize / 2 - keyboardImage.get_rect().height / 2))
+            window.blit(keyboardImage, (windowSize / 2 - keyboardImage.get_rect().width / 2,
+                                        windowSize / 2 - keyboardImage.get_rect().height / 2)
+                        )
         pygame.display.update()
     pygame.quit()
 
