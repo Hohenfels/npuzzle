@@ -126,6 +126,7 @@ def visu(state, moves, puzzleSize):
                     showKeyMenu = False if showKeyMenu else True
                 elif event.key == pygame.K_SPACE:
                     autoMode = False if autoMode else True
+                    print("AutoMode activated" if autoMode else "AutoMode desactivated")
         for tile in state:
             if tile.val != 0:
                 tile.move(slidingSpeed)
