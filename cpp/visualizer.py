@@ -69,7 +69,7 @@ def parse(filename):
                     lastZeroPos = getZeroPos(initState)
                 elif len(currState) == size * size:
                     newZeroPos = getZeroPos(currState)
-                    moves.append((newZeroPos, getDir(lastZeroPos, newZeroPos, size)))
+                    moves.append(([t.val for t in initState].index(currState[lastZeroPos]), getDir(lastZeroPos, newZeroPos, size)))
                     lastZeroPos = newZeroPos
                     currState = []
                 else:
@@ -96,7 +96,9 @@ def visu(state, moves, puzzleSize):
     showKeyMenu = False
     autoMode = False
 
-    keyboardImage = pygame.image.load("./keyboardImage.png")
+    keyboardImage = pygame.image.load("./res/keyboardImage.png")
+
+    print(moves)
 
     while not done:
         pygame.display.set_caption(f'N-Puzzle | Step: {moveIdx + 1} / {len(moves)} | Press F1 for help')
