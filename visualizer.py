@@ -1,4 +1,6 @@
 import os
+import sys
+from subprocess import check_output, CalledProcessError
 os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
 import pygame
 
@@ -151,5 +153,16 @@ def visu(state, moves, puzzleSize):
     pygame.quit()
 
 if __name__ == "__main__":
+    def badBoy():
+        print("Visu: You must launch the visualizer from npuzzle!")
+        sys.exit(1)
+
+    try:
+        pid = int(check_output(["pidof", "-s", "npuzzle"])) + 1
+    except (CalledProcessError):
+        badBoy()
+
+    if os.getppid() != pid:
+        badBoy()
     initState, size, moves = parse('path.txt')
     visu(initState, moves, size)
