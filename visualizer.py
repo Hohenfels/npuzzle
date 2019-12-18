@@ -95,7 +95,7 @@ def visu(state, moves, puzzleSize):
     done = False
     tileSize = windowSize / puzzleSize
     fontSize = 30 + (10 - size) * 10
-    slidingSpeed = 20
+    slidingSpeed = 20 - 2 * size + 1
     showKeyMenu = False
     autoMode = False
 
@@ -122,11 +122,11 @@ def visu(state, moves, puzzleSize):
                         state[moves[moveIdx][0]].moveTo((-moves[moveIdx][1][0] * tileSize, -moves[moveIdx][1][1] * tileSize))
                         moveIdx -= 1
                 elif event.key == pygame.K_PAGEUP:
-                    slidingSpeed -= 5 if slidingSpeed - 5 > 0 else 0
+                    slidingSpeed = slidingSpeed - 5 if slidingSpeed - 5 > 1 else 2 
                     print(f"Speeding up sliding speed: {slidingSpeed}")
                 elif event.key == pygame.K_PAGEDOWN:
-                    print(f"Slowing down sliding speed: {slidingSpeed}")
                     slidingSpeed += 5
+                    print(f"Slowing down sliding speed: {slidingSpeed}")
                 elif event.key == pygame.K_F1:
                     showKeyMenu = False if showKeyMenu else True
                     print("Showing menu" if showKeyMenu else "Hiding menu")
