@@ -23,7 +23,6 @@ class Tile():
 
     def moveTo(self, dir):
         self.target = (self.x + dir[0], self.y + dir[1])
-        print(self, self.target, dir)
 
     def move(self, slidingSpeed):
         if self.x != self.target[0] or self.y != self.target[1]:
@@ -62,10 +61,11 @@ def parse(filename):
     with open(filename, 'r') as f:
         for line in f.readlines():
             if size == 0:
-                size = len(line.split(' '))
+                size = len([l for l in line.split(' ') if l.isdigit()])
             if len((initState)) != size * size:
                 for l in line.split(' '):
-                    initState.append(Tile(len(initState) % size * windowSize / size, len(initState) // size * windowSize / size, int(l)))
+                    if l.isdigit():
+                        initState.append(Tile(len(initState) % size * windowSize / size, len(initState) // size * windowSize / size, int(l)))
             else:
                 if lastZeroPos == -1:
                     lastZeroPos = getZeroPos(initState)
@@ -76,7 +76,8 @@ def parse(filename):
                     currState = []
                 else:
                     for l in line.split(' '):
-                        currState.append(int(l))
+                        if l.isdigit():
+                            currState.append(int(l))
     return initState, size, moves
 
 def visu(state, moves, puzzleSize):
@@ -99,8 +100,6 @@ def visu(state, moves, puzzleSize):
     autoMode = False
 
     keyboardImage = pygame.image.load("./res/keyboardImage.png")
-
-    print(moves)
 
     while not done:
         pygame.display.set_caption(f'N-Puzzle | Step: {moveIdx + 1} / {len(moves)} | Press F1 for help')

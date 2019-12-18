@@ -79,7 +79,7 @@ std::ostream&       operator<<(std::ostream& o, Node& n)
     int                 width = log10(size * size - 1) + 1;
 
     for (size_t i = 0; i < puzzle.size(); i++)
-        o << std::right << std::setw(width) << puzzle[i] << (!((i + 1) % size) ? "\n" : " ");
+        o << std::right << std::setw(width) << puzzle[i] << (!((i + 1) % size) ? " \n" : " ");
     
     return o;
 }
