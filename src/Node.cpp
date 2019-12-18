@@ -1,4 +1,4 @@
-#include "../inc/Node.h"
+#include "Node.h"
 
 Node::Node(float (*hFunc)(std::vector<int> state, size_t size), std::vector<int> state, size_t size) : _size(size), _heuristic(hFunc), _parent(nullptr), _state(state), _score(0), _g(1), isSolved(false)
 {
@@ -31,13 +31,11 @@ size_t  Node::getHeuristic()
     return this->_heuristic(this->_state, this->_size);
 }
 
-Coord const     Node::getSnailCoords(size_t val, size_t size)
+Coord const     Node::getSnailCoords(int val, size_t size)
 {
     int     r = 0;
     int     d, m, c;
-    size_t     x[4];
-    size_t     y[4];
-    size_t  span = size;
+    int     span = size;
 
     while (val > span)
     {
@@ -48,17 +46,7 @@ Coord const     Node::getSnailCoords(size_t val, size_t size)
     m = r % 4;
     c = size - 1 - d;
 
-    x[0] = d;
-    x[1] = d + val;
-    x[2] = c;
-    x[3] = c - val;
-
-    y[0] = d + val - 1;
-    y[1] = c;
-    y[2] = c - val;
-    y[3] = d;
-
-    return {static_cast<int>(y[m]), static_cast<int>(x[m])};
+    return {(snailRet){d + val - 1, c, c - val, d}.array[m], (snailRet){d, d + val, c, c - val}.array[m]};
 }
 
 Coord const     Node::getEmptyCoord()
@@ -88,9 +76,10 @@ std::ostream&       operator<<(std::ostream& o, Node& n)
 {
     std::vector<int>    puzzle = n.getState();
     size_t              size = n.getSize();
+    int                 width = log10(size * size - 1) + 1;
 
     for (size_t i = 0; i < puzzle.size(); i++)
-        o << puzzle[i] << (!((i + 1) % size) ? "\n" : " ");
+        o << std::right << std::setw(width) << puzzle[i] << (!((i + 1) % size) ? "\n" : " ");
     
     return o;
 }

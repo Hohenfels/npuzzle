@@ -5,6 +5,7 @@
 #include <algorithm>
 #include <iostream>
 #include <stdlib.h>
+#include <math.h>
 
 #include "solver.h"
 
@@ -27,7 +28,7 @@ public:
     Node(Node & src);
 
     virtual ~Node();
-    static Coord const          getSnailCoords(size_t val, size_t size);
+    static Coord const          getSnailCoords(int val, size_t size);
 
     bool                isSolved;
 
@@ -47,5 +48,10 @@ public:
 };
 
 std::ostream&       operator<<(std::ostream& o, Node& n);   
+
+typedef struct
+{
+    int  array[4];
+} snailRet;
 
 #endif

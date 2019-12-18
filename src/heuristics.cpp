@@ -92,7 +92,7 @@ float   Heuristics::Gaschnig(std::vector<int> state, size_t size)
 {
     int emptyIndex;
     size_t count = 0;
-    std::vector<int> goal = createTarget(size);
+    static std::vector<int> goal = createTarget(size);
     
     while (state != goal)
     {

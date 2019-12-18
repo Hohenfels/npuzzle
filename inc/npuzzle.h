@@ -1,5 +1,5 @@
-#ifndef __npuzzle__h
-#define __npuzzle__h
+#ifndef __NPUZZLE__H__
+#define __NPUZZLE__H__
 
 #include "solver.h"
 #include "Node.h"
