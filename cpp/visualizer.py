@@ -1,3 +1,5 @@
+import os
+os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
 import pygame
 
 windowSize = 900
@@ -92,7 +94,7 @@ def visu(state, moves, puzzleSize):
     done = False
     tileSize = windowSize / puzzleSize
     fontSize = 30 + (10 - size) * 10
-    slidingSpeed = 30
+    slidingSpeed = 20
     showKeyMenu = False
     autoMode = False
 

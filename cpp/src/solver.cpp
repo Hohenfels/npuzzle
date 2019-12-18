@@ -30,7 +30,7 @@ void    AStar(int hFuncIdx, size_t size, std::vector<int> grid, bool greedy, boo
         node = queue.top();
         queue.pop();
 
-        for (Node *n : createChildren(node, &seen))
+        for (Node *n : createChildren(node, seen))
         {
             n->processScore(greedy, uniform);
             queue.push(n);
@@ -41,76 +41,11 @@ void    AStar(int hFuncIdx, size_t size, std::vector<int> grid, bool greedy, boo
     }
 
     printTime(std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now() - begin).count());
-    printPath(node, timeComplexity, spaceComplexity, std::deque<std::pair<size_t, void*>>());
+    printPath(node, timeComplexity, spaceComplexity);
     deleteNodes(seen);
 }
 
-std::pair<bool, long long>   IDASearch(std::deque<std::pair<size_t, void*>>& path, int cost, long threshold, size_t& time, size_t& space)
-{
-    Node    *node = static_cast<Node*>(path[0].second);
-    int     score = cost + node->getHeuristic();
-    std::pair<bool, long long>          searchRet;
-    long    ret = __LONG_MAX__;
-
-    if (score > threshold)
-        return std::make_pair<bool, long>(false, score);
-    else if (node->getHeuristic() == 0)
-        return std::make_pair<bool, long>(true, score);
-    for (Node *child : createChildren(node, nullptr))
-    {
-        if (std::find_if(path.begin(), path.end(), [&child](const std::pair<size_t, void*>& check) { return child->getHash() == check.first; }) == path.end())
-        {
-            path.push_front(std::make_pair<size_t, void*>(child->getHash(), child));
-            searchRet = IDASearch(path, cost + 1, threshold, time, space);
-            if (searchRet.first)
-                return searchRet;
-            else if (searchRet.second < ret)
-                ret = searchRet.second;
-            delete static_cast<Node*>(path[0].second);
-            path.pop_front();
-            space++;
-        }
-        else
-            delete child;
-    }
-    time++;
-
-    return std::make_pair<bool, long long>(false, ret);
-}
-
-void                    IDAStar(int hFuncIdx, size_t size, std::vector<int> grid)
-{
-    float (*heuristics[4])(std::vector<int> state, size_t size) = {Heuristics::Manhattan, Heuristics::LinearConflict, Heuristics::Gaschnig, Heuristics::Yolo};
-    std::deque<std::pair<size_t, void*>>  path;
-    size_t                              timeComplexity = 0;
-    size_t                              spaceComplexity = 0;
-    std::pair<bool, long long>          ret;
-    long                                threshold;
-    auto                                begin = std::chrono::steady_clock::now();
-    Node                                *node = new Node(heuristics[hFuncIdx], grid, size);
-
-    threshold = node->getHeuristic();
-    path.push_front(std::make_pair<size_t, void*>(node->getHash(), node));
-
-    while (!path.empty())
-    {
-        ret = IDASearch(path, 0, threshold, timeComplexity, spaceComplexity);
-        if (ret.first || ret.second == __LONG_MAX__)
-            break; //solved
-        else
-            threshold = ret.second;
-        timeComplexity++;
-    }
-
-    printTime(std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now() - begin).count());
-    printPath(nullptr, timeComplexity, spaceComplexity, path);
-
-    for (auto i : path)
-        delete static_cast<Node*>(i.second);
-
-}
-
-std::vector<Node *>   createChildren(Node *parent, std::map<size_t, Node*> *seen)
+std::vector<Node *>   createChildren(Node *parent, std::map<size_t, Node*>& seen)
 {
     std::vector<Node *>   children;
     Coord const         emptyCoord = parent->getEmptyCoord();
@@ -129,7 +64,7 @@ std::vector<Node *>   createChildren(Node *parent, std::map<size_t, Node*> *seen
         
         std::swap(newChild->getState()[emptyCoord.y * parent->getSize() + emptyCoord.x], newChild->getState()[newCoords.y * parent->getSize() + newCoords.x]);
 
-        if (!seen || seen->find(newChild->getHash()) == seen->end())
+        if (seen.find(newChild->getHash()) == seen.end())
             children.push_back(newChild);
         else
             delete newChild;
@@ -138,7 +73,7 @@ std::vector<Node *>   createChildren(Node *parent, std::map<size_t, Node*> *seen
     return children;
 }
 
-void    printPath(Node *node, size_t timeComplexity, size_t spaceComplexity, std::deque<std::pair<size_t, void*>> ida_path)
+void    printPath(Node *node, size_t timeComplexity, size_t spaceComplexity)
 {
     std::vector<Node*>  path;
     size_t              length = 0;
@@ -156,14 +91,6 @@ void    printPath(Node *node, size_t timeComplexity, size_t spaceComplexity, std
         ++length;
 
         std::reverse(path.begin(), path.end());
-    }
-    else
-    {
-        for (auto it = ida_path.rbegin(); it != ida_path.rend(); ++it)
-        {
-            path.push_back(static_cast<Node*>(it->second));
-            ++length;
-        }
     }
 
     output.open("path.txt");

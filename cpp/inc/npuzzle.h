@@ -14,7 +14,6 @@ struct CLOpt
     int     heuristicIdx;
     bool    greedy = false;
     bool    uniform = false;
-    bool    ida = false;
     bool    visu = false;
 };
 
