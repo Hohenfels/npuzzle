@@ -14,6 +14,6 @@ random.txt
 */*/*.pyc
 output*.txt
 .vscode
-cpp/obj
-cpp/npuzzle
-cpp/path.txt
+obj
+npuzzle
+path.txt
