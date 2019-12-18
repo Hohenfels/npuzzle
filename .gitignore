@@ -13,3 +13,7 @@ random.txt
 */*.pyc
 */*/*.pyc
 output*.txt
+.vscode
+obj
+npuzzle
+path.txt
