@@ -158,11 +158,11 @@ if __name__ == "__main__":
         sys.exit(1)
 
     try:
-        pid = int(check_output(["pidof", "-s", "npuzzle"])) + 1
+        pid = check_output(["pidof", "npuzzle"])
     except (CalledProcessError):
         badBoy()
 
-    if os.getppid() != pid:
+    if not pid or os.getppid() != int(pid):
         badBoy()
     initState, size, moves = parse('path.txt')
     visu(initState, moves, size)

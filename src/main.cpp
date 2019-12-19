@@ -79,7 +79,7 @@ int     main(int argc, char** argv)
         return 1;
 
     if (opt.visu)
-        if (system("python3 visualizer.py 2> /dev/null"))
+        if (system("python3 visualizer.py"))
             std::cerr << "Couldn't launch visualizer...\n";
 
     return 0;
